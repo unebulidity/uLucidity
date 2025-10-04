@@ -102,8 +102,7 @@ private:
     }
 public:
 protected:
-    typedef typename extends::string string;
-    typedef typename extends::string string_t;
+    typedef typename extends::string_t string_t;
     typedef typename extends::char_t char_t;
 
     //////////////////////////////////////////////////////////////////////////

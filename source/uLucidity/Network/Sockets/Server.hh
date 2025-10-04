@@ -36,6 +36,8 @@ public:
     typedef TExtends Extends;
     typedef Servert Derives;
 
+    typedef typename Extends::string string;
+    
     //////////////////////////////////////////////////////////////////////////
     /// constructor / destructor
     Servert() {
@@ -46,18 +48,19 @@ private:
     Servert(const Servert &copy) {
     }
 public:
-
-    //////////////////////////////////////////////////////////////////////////
 protected:
-    typedef typename Extends::string string;
-    typedef typename Extends::string string_t;
+    typedef typename Extends::string_t string_t;
     typedef typename Extends::char_t char_t;
 
     //////////////////////////////////////////////////////////////////////////
     virtual int default_Run(string &target, const string &source) {
         int err = 0;
-        LOG_INFO("...in");
-        LOG_INFO("out...");
+        LOG_INFO("(!(err = this->all_Accept(\"" << target << "\", \"" << source << "\")))...");
+        if (!(err = this->all_Accept(target, source))) {
+            LOG_INFO("...(!(err = this->all_Accept(\"" << target << "\", \"" << source << "\")))");
+        } else {
+            LOG_INFO("...failed on (!(err = this->all_Accept(\"" << target << "\", \"" << source << "\")))");
+        }
         return err;
     }
 

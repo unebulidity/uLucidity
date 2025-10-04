@@ -36,6 +36,8 @@ public:
     typedef TExtends Extends;
     typedef Clientt Derives;
 
+    typedef typename Extends::string string;
+
     //////////////////////////////////////////////////////////////////////////
     /// class Events
     class _EXPORT_CLASS Events: virtual public uLucidity::ImplementBase {
@@ -76,8 +78,7 @@ public:
 
     //////////////////////////////////////////////////////////////////////////
 protected:
-    typedef typename Extends::string string;
-    typedef typename Extends::string string_t;
+    typedef typename Extends::string_t string_t;
     typedef typename Extends::char_t char_t;
 
     //////////////////////////////////////////////////////////////////////////

@@ -58,8 +58,7 @@ private:
     }
 public:
 protected:
-    typedef typename extends::string string;
-    typedef typename extends::string string_t;
+    typedef typename extends::string_t string_t;
     typedef typename extends::char_t char_t;
 
     //////////////////////////////////////////////////////////////////////////
@@ -88,6 +87,7 @@ protected:
     /// ...client_run
     virtual int client_run(int argc, char_t** argv, char_t** env) {
         int err = 0;
+        uLucidity::Network::Sockets::Client::string request_(this->request_), response_(this->response_);
         XOS_LOG_INFO("(!(err = client_.all_Run(response_ = \"" << response_ << "\", request_ = \"" << request_ << "\")))...");
         if (!(err = client_.all_Run(response_, request_))) {
             XOS_LOG_INFO("...(!(" << err << " = client_.all_Run(response_ = \"" << response_ << "\", request_ = \"" << request_ << "\")))");
