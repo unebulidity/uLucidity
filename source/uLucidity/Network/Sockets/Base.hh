@@ -90,6 +90,40 @@ protected:
     typedef xos::network::transport* (Derives::*transport_t)();
     typedef xos::network::endpoint_exception_t endpoint_exception_t;
 
+public:
+    //////////////////////////////////////////////////////////////////////////
+    /// class Events
+    class _EXPORT_CLASS Events: virtual public uLucidity::ImplementBase {
+    public:
+        typedef uLucidity::ImplementBase Implements;
+        typedef typename Baset::string string;
+        typedef typename Baset::char_t char_t;
+    
+        //////////////////////////////////////////////////////////////////////////
+        /// constructor / destructor
+        virtual ~Events() {
+        }
+    
+        //////////////////////////////////////////////////////////////////////////
+        virtual int on_receive(char_t* chars, size_t length) { 
+            int err = 0;
+            return err;
+        }
+        virtual int on_begin_receive(char_t* chars, size_t length) { 
+            int err = 0;
+            return err;
+        }
+        virtual int on_end_receive(char_t* chars, size_t length) { 
+            int err = 0;
+            return err;
+        }
+        virtual int on_after_receive(string &target, const string &source) {
+            int err = 0;
+            return err;
+        }
+    }; /// class Events
+
+protected:
     //////////////////////////////////////////////////////////////////////////
     /// ...Run
     virtual int Run(string &target, const string &source) {
@@ -195,6 +229,7 @@ protected:
                                             } else {}
                                             LOG_DEBUG("(!(err = on_begin_receive(receive_chars_, " << count << ")))...");
                                             if (!(err = on_begin_receive(receive_chars_, count))) {
+                                                string target(source);
                                                 
                                                 LOG_DEBUG("...(!(" << err << " = on_begin_receive(receive_chars_, " << count << ")))");
                                                 do {
@@ -225,21 +260,21 @@ protected:
                                                 } while (0 < count);
                                                 LOG_DEBUG("(!(err = on_end_receive(receive_chars_, " << amount << ")))...");
                                                 if (!(err = on_end_receive(receive_chars_, amount))) {
-                                                    string message(source);
+                                                    string source(receive_chars_, amount);
                                                     
                                                     LOG_DEBUG("...(!(" << err << " = on_end_receive(receive_chars_, " << amount << ")))");
-                                                    LOG_DEBUG("(!(err = on_after_receive(\"" << message << "\", \"" << source << "\")))...");
-                                                    if (!(err = on_after_receive(message, source))) {
+                                                    LOG_DEBUG("(!(err = on_after_receive(\"" << target << "\", \"" << source << "\")))...");
+                                                    if (!(err = on_after_receive(target, source))) {
 
-                                                        LOG_DEBUG("...(!(" << err << " = on_after_receive(\"" << message << "\", \"" << source << "\")))");
-                                                        LOG_DEBUG("(!(err = before_send(\"" << message << "\", \"" << source << "\")))...");
-                                                        if (!(err = before_send(message, source))) {
+                                                        LOG_DEBUG("...(!(" << err << " = on_after_receive(\"" << target << "\", \"" << source << "\")))");
+                                                        LOG_DEBUG("(!(err = before_send(\"" << target << "\", \"" << source << "\")))...");
+                                                        if (!(err = before_send(target, source))) {
     
-                                                            LOG_DEBUG("...(!(" << err << " = before_send(\"" << message << "\", \"" << source << "\")))");
-                                                            LOG_DEBUG("((chars = message.has_chars(length)))...");
-                                                            if ((chars = message.has_chars(length))) {
+                                                            LOG_DEBUG("...(!(" << err << " = before_send(\"" << target << "\", \"" << source << "\")))");
+                                                            LOG_DEBUG("((chars = target.has_chars(length)))...");
+                                                            if ((chars = target.has_chars(length))) {
     
-                                                                LOG_DEBUG("...((\"" << chars << "\" = message.has_chars(" << length << ")))");
+                                                                LOG_DEBUG("...((\"" << chars << "\" = target.has_chars(" << length << ")))");
                                                                 LOG_DEBUG("(0 < (count = sk.send(\"" << chars << "\", " << length << ", 0)))...");
                                                                 if (0 < (count = sk.send(chars, length, 0))) {
                                                                     LOG_DEBUG("...(0 < (" << count << " = sk.send(\"" << chars << "\", " << length << ", 0)))");
@@ -247,13 +282,13 @@ protected:
                                                                     LOG_DEBUG("...failed on (0 < (" << count << " = sk.send(\"" << chars << "\", " << length << ", 0)))");
                                                                 }
                                                             } else {
-                                                                LOG_DEBUG("...failed on ((chars = message.has_chars(" << length << ")))");
+                                                                LOG_DEBUG("...failed on ((chars = target.has_chars(" << length << ")))");
                                                             }
                                                         } else {
-                                                            LOG_DEBUG("...failed on (!(" << err << " = before_send(\"" << message << "\", \"" << source << "\")))");
+                                                            LOG_DEBUG("...failed on (!(" << err << " = before_send(\"" << target << "\", \"" << source << "\")))");
                                                         }
                                                     } else {
-                                                        LOG_DEBUG("...failed on (!(" << err << " = on_after_receive(\"" << message << "\", \"" << source << "\")))");
+                                                        LOG_DEBUG("...failed on (!(" << err << " = on_after_receive(\"" << target << "\", \"" << source << "\")))");
                                                     }
                                                 } else {
                                                     LOG_DEBUG("...failed on (!(" << err << " = on_begin_receive(receive_chars_, " << amount << ")))");
@@ -344,15 +379,15 @@ protected:
 
         LOG_DEBUG("((send = (this->send_)))...");
         if ((send = (this->send_))) {
-            string message(source);
+            string target(source);
 
-            LOG_DEBUG("(!(err = before_send(message, \"" << source << "\")))...");
-            if (!(err = before_send(message, source))) {
+            LOG_DEBUG("(!(err = before_send(target, \"" << source << "\")))...");
+            if (!(err = before_send(target, source))) {
                 const char* chars = 0;
                 size_t length = 0;
 
-                LOG_DEBUG("((chars = message.has_chars(length)))...");
-                if ((chars = message.has_chars(length))) {
+                LOG_DEBUG("((chars = target.has_chars(length)))...");
+                if ((chars = target.has_chars(length))) {
                     xos::network::endpoint* ep = 0;
         
                     LOG_DEBUG("((ep_) && (ep = ((this->*ep_)())))...");
@@ -415,7 +450,7 @@ protected:
     }
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
-    virtual int before_send(string &message, const string &source) {
+    virtual int before_send(string &target, const string &source) {
         int err = 0;
         const char_t cr = ((char_t)'\r'), lf = ((char_t)'\n');
         const char* chars = 0;
@@ -433,8 +468,8 @@ protected:
                     LOG_DEBUG("((index = " << index << " < length = " << length << "))...");
                     if ((index < length)) {
 
-                        LOG_DEBUG("message.assign(\"" << chars << "\", " << index << ")...");
-                        message.assign(chars, index);
+                        LOG_DEBUG("target.assign(\"" << chars << "\", " << index << ")...");
+                        target.assign(chars, index);
                     } else {}
                     break;
                 }
@@ -442,8 +477,8 @@ protected:
         } else {
             LOG_DEBUG("...failed on ((chars = source.has_chars(" << length << ")))");
         }
-        LOG_DEBUG("message.append(\"" << endof_message_to_send_ << "\")...");
-        message.append(endof_message_to_send_);
+        LOG_DEBUG("target.append(\"" << endof_message_to_send_ << "\")...");
+        target.append(endof_message_to_send_);
         return err;
     }
     ///////////////////////////////////////////////////////////////////////
@@ -531,7 +566,7 @@ protected:
         int err = 0;
         return err;
     }
-    virtual int on_after_receive(string &message, const string &source) {
+    virtual int on_after_receive(string &target, const string &source) {
         int err = 0;
         return err;
     }

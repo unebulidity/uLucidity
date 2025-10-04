@@ -23,6 +23,7 @@
 
 #include "uLucidity/Network/Sockets/Server.hh"
 #include "uLucidity/Application/Console/Network/Sockets/uDentify/Server/MainOpt.hh"
+#include "uLucidity/Protocol/Json/Server/Main.hh"
 
 namespace uLucidity {
 namespace Application {
@@ -34,8 +35,10 @@ namespace Server {
 
 //////////////////////////////////////////////////////////////////////////
 /// class Maint
-template <class TExtends = uLucidity::Application::Console::Network::Sockets::uDentify::Server::MainOptt<>, class TImplements = typename TExtends::Implements>
-class _EXPORT_CLASS Maint: virtual public TImplements, public TExtends {
+template 
+<class TEvents = uLucidity::Network::Sockets::Server::Events,
+ class TExtends = uLucidity::Application::Console::Network::Sockets::uDentify::Server::MainOptt<>, class TImplements = typename TExtends::Implements>
+class _EXPORT_CLASS Maint: virtual public TEvents, virtual public TImplements, public TExtends {
 public:
     typedef TImplements Implements, implements;
     typedef TExtends Extends, extends;
@@ -45,7 +48,8 @@ public:
     /// constructor / destructor
     Maint()
     : request_(ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_UDENTIFY_DEFAULT_REQUEST),
-      response_(ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_UDENTIFY_DEFAULT_RESPONSE) {
+      response_(ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_UDENTIFY_DEFAULT_RESPONSE),
+      server_(*this) {
     }
     virtual ~Maint() {
     }
@@ -54,6 +58,7 @@ private:
     }
 public:
 protected:
+    typedef uLucidity::Network::Sockets::Server::string string;
     typedef typename extends::string_t string_t;
     typedef typename extends::char_t char_t;
 
@@ -83,7 +88,7 @@ protected:
     /// ...server_run
     virtual int server_run(int argc, char_t** argv, char_t** env) {
         int err = 0;
-        uLucidity::Network::Sockets::Server::string request_(this->request_), response(this->response_);
+        string request_(this->request_), response_(this->response_);
         XOS_LOG_INFO("(!(err = server_.all_Run(request_ = \"" << request_ << "\", response_ = \"" << response_ << "\")))...");
         if (!(err = server_.all_Run(request_, response_))) {
             XOS_LOG_INFO("...(!(" << err << " = server_.all_Run(request_ = \"" << request_ << "\", response_ = \"" << response_ << "\")))");
@@ -148,12 +153,23 @@ protected:
         this->outln(chars, length);
         return err;
     }
+    virtual int on_after_receive(string &target, const string &source) {
+        int err = 0;
+        XOS_LOG_INFO("(!(err = main_.all_Run(\"" << target << "\", \"" << source << "\")))...");
+        if (!(err = main_.all_Run(target, source))) {
+            XOS_LOG_INFO("...(!(" << err << " = main_.all_Run(\"" << target << "\", \"" << source << "\")))");
+        } else {
+            XOS_LOG_INFO("...failed on (!(" << err << " = main_.all_Run(\"" << target << "\", \"" << source << "\")))");
+        }
+        return err;
+    }
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
 protected:
     string_t request_, response_;
     uLucidity::Network::Sockets::Server server_;
+    uLucidity::Protocol::Json::Server::Main main_;
 }; /// class Maint
 typedef Maint<> Main;
 

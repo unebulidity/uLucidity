@@ -37,33 +37,7 @@ public:
     typedef Clientt Derives;
 
     typedef typename Extends::string string;
-
-    //////////////////////////////////////////////////////////////////////////
-    /// class Events
-    class _EXPORT_CLASS Events: virtual public uLucidity::ImplementBase {
-    public:
-        typedef uLucidity::ImplementBase Implements;
-        typedef typename Clientt::Extends::char_t char_t;
-    
-        //////////////////////////////////////////////////////////////////////////
-        /// constructor / destructor
-        virtual ~Events() {
-        }
-    
-        //////////////////////////////////////////////////////////////////////////
-        virtual int on_receive(char_t* chars, size_t length) { 
-            int err = 0;
-            return err;
-        }
-        virtual int on_begin_receive(char_t* chars, size_t length) { 
-            int err = 0;
-            return err;
-        }
-        virtual int on_end_receive(char_t* chars, size_t length) { 
-            int err = 0;
-            return err;
-        }
-    }; /// class Events
+    typedef typename Extends::Events Events;
 
     //////////////////////////////////////////////////////////////////////////
     /// constructor / destructor
@@ -106,6 +80,10 @@ protected:
     virtual int on_end_receive(char_t* chars, size_t length) { 
         int err = 0;
         err = events_.on_end_receive(chars, length);
+        return err;
+    }
+    virtual int on_after_receive(string &target, const string &source) {
+        int err = 0;
         return err;
     }
 

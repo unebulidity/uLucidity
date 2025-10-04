@@ -37,10 +37,11 @@ public:
     typedef Servert Derives;
 
     typedef typename Extends::string string;
+    typedef typename Extends::Events Events;
     
     //////////////////////////////////////////////////////////////////////////
     /// constructor / destructor
-    Servert() {
+    Servert(Events &events): events_(events) {
     }
     virtual ~Servert() {
     }
@@ -63,9 +64,31 @@ protected:
         }
         return err;
     }
+    //////////////////////////////////////////////////////////////////////////
+    virtual int on_receive(char_t* chars, size_t length) { 
+        int err = 0;
+        err = events_.on_receive(chars, length);
+        return err;
+    }
+    virtual int on_begin_receive(char_t* chars, size_t length) { 
+        int err = 0;
+        err = events_.on_begin_receive(chars, length);
+        return err;
+    }
+    virtual int on_end_receive(char_t* chars, size_t length) { 
+        int err = 0;
+        err = events_.on_end_receive(chars, length);
+        return err;
+    }
+    virtual int on_after_receive(string &target, const string &source) {
+        int err = 0;
+        err = events_.on_after_receive(target, source);
+        return err;
+    }
 
     //////////////////////////////////////////////////////////////////////////
 protected:
+    Events &events_;
 }; /// class Servert
 typedef Servert<> Server;
 
