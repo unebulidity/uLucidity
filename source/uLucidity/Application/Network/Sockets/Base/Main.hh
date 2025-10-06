@@ -103,6 +103,38 @@ private:
     Maint(const Maint &copy): Extends(copy) {
     }
 public:
+    //////////////////////////////////////////////////////////////////////////
+    /// class Events
+    class _EXPORT_CLASS Events: virtual public uLucidity::ImplementBase {
+    public:
+        typedef uLucidity::ImplementBase Implements;
+        typedef typename Maint::string string;
+        typedef typename Maint::char_t char_t;
+    
+        //////////////////////////////////////////////////////////////////////////
+        /// constructor / destructor
+        virtual ~Events() {
+        }
+    
+        //////////////////////////////////////////////////////////////////////////
+        virtual int on_receive(char_t* chars, size_t length) { 
+            int err = 0;
+            return err;
+        }
+        virtual int on_begin_receive(char_t* chars, size_t length) { 
+            int err = 0;
+            return err;
+        }
+        virtual int on_end_receive(char_t* chars, size_t length) { 
+            int err = 0;
+            return err;
+        }
+        virtual int on_after_receive(string &target, const string &source) {
+            int err = 0;
+            return err;
+        }
+    }; /// class Events
+
 protected:
     typedef int (Derives::*send_t)
     (xos::network::sockets::interface& s, xos::network::sockets::endpoint& ep, const char_t* chars, size_t length);
@@ -164,6 +196,212 @@ public:
         return err;
     }
 protected:
+
+    //////////////////////////////////////////////////////////////////////////
+    /// ...Accept
+    virtual int Accept(string &target, const string &source) {
+        int err = 0;
+        send_t send = 0;
+        string_t old_host(host_);
+
+        LOG_DEBUG("host_.assign(accept_host_)...");
+        host_.assign(accept_host_);
+
+        LOG_DEBUG("((send = (this->send_)))...");
+        if ((send = (this->send_))) {
+            xos::network::sockets::endpoint* ep = 0;
+    
+            LOG_DEBUG("((epoint_) && (ep = ((this->*epoint_)())))...");
+            if ((epoint_) && (ep = ((this->*epoint_)()))) {
+                xos::network::sockets::transport* tp = 0;
+    
+                LOG_DEBUG("((tport_) && (tp = (this->*tport_)()))...");
+                if ((tport_) && (tp = (this->*tport_)())) {
+                    xos::network::sockets::os::interface s;
+    
+                    LOG_DEBUG("((s.open(*tp)))...");
+                    if ((s.open(*tp))) {
+    
+                        LOG_DEBUG("((s.listen(*ep)))...");
+                        if ((s.listen(*ep))) {
+                            string &target_parameter = target;
+                            size_t endof_message_to_send_length = endof_message_to_send_.length();
+                            xos::network::sockets::os::interface sk;
+                            
+                            LOG_DEBUG("for (bool done = false; !done; ) {...");
+                            for (bool done = false; !done; done = accept_one_) {
+                                
+                                LOG_DEBUG("(!(done = !(sk.closed())))...");
+                                if (!(done = !(sk.closed()))) {
+                                    
+                                    LOG_DEBUG("(!(done = !(s.accept(sk, *ep))))...");
+                                    if (!(done = !(s.accept(sk, *ep)))) {
+                                        bool endof_message_to_send_received = false;
+                                        const char* chars = 0;
+                                        size_t length = 0;
+                                        ssize_t count = 0;
+    
+                                        LOG_DEBUG("...(!(done = !(s.accept(sk, *ep))))");
+                                        LOG_DEBUG("(0 < (count = sk.recv(receive_chars_, " << sizeof(receive_chars_) << ", 0)))...");
+                                        if (0 < (count = sk.recv(receive_chars_, sizeof(receive_chars_), 0))) {
+                                            const char* to_chars = 0;
+                                            size_t amount = count;
+                                            string to_string;
+
+                                            if ((endof_message_to_send_length <= count)) {
+                                                to_chars = receive_chars_+count-endof_message_to_send_length;
+                                                to_string.assign_chars(to_chars, endof_message_to_send_length);
+                                                if (endof_message_to_send_received = !(0 != (endof_message_to_send_.compare(to_string)))) {
+                                                    amount = (count -= endof_message_to_send_length);
+                                                } else {}
+                                            } else {}
+                                            LOG_DEBUG("(!(err = on_begin_receive(receive_chars_, " << count << ")))...");
+                                            if (!(err = on_begin_receive(receive_chars_, count))) {
+                                                
+                                                LOG_DEBUG("...(!(" << err << " = on_begin_receive(receive_chars_, " << count << ")))");
+                                                do {
+                                                    if (!(endof_message_to_send_received)) {
+                                                        LOG_DEBUG("(0 < (count = sk.recv(receive_chars_, " << sizeof(receive_chars_) << ", 0)))...");
+                                                        if (0 < (count = sk.recv(receive_chars_, sizeof(receive_chars_), 0))) {
+
+                                                            if ((endof_message_to_send_length <= count)) {
+                                                                to_chars = receive_chars_+count-endof_message_to_send_length;
+                                                                to_string.assign_chars(to_chars, endof_message_to_send_length);
+                                                                if (endof_message_to_send_received = !(0 != (endof_message_to_send_.compare(to_string)))) {
+                                                                    count -= endof_message_to_send_length;
+                                                                } else {}
+                                                            } else {}
+                                                            amount += count;
+                                                            LOG_DEBUG("(!(err = on_receive(receive_chars_, " << count << ")))...");
+                                                            if (!(err = on_receive(receive_chars_, count))) {
+                                                                LOG_DEBUG("...(!(" << err << " = on_receive(receive_chars_, " << count << ")))");
+                                                                continue;
+                                                            } else {
+                                                                LOG_DEBUG("...failed on (!(" << err << " = on_receive(receive_chars_, " << count << ")))");
+                                                                break;
+                                                            }
+                                                        } else {
+                                                            LOG_DEBUG("...failed on (0 < (count = sk.recv(receive_chars_, " << count << ", 0)))");
+                                                        }
+                                                    } else  {}
+                                                    break;
+                                                } while (0 < count);
+                                                LOG_DEBUG("(!(err = on_end_receive(receive_chars_, " << amount << ")))...");
+                                                if (!(err = on_end_receive(receive_chars_, amount))) {
+                                                    string target(target_parameter), source(receive_chars_, amount);
+                                                    
+                                                    LOG_DEBUG("...(!(" << err << " = on_end_receive(receive_chars_, " << amount << ")))");
+                                                    LOG_DEBUG("(!(err = on_after_receive(\"" << target << "\", \"" << source << "\")))...");
+                                                    if (!(err = on_after_receive(target, source))) {
+
+                                                        LOG_DEBUG("...(!(" << err << " = on_after_receive(\"" << target << "\", \"" << source << "\")))");
+                                                        LOG_DEBUG("(!(err = before_send(\"" << target << "\", \"" << source << "\")))...");
+                                                        if (!(err = before_send(target, source))) {
+    
+                                                            LOG_DEBUG("...(!(" << err << " = before_send(\"" << target << "\", \"" << source << "\")))");
+                                                            LOG_DEBUG("((chars = target.has_chars(length)))...");
+                                                            if ((chars = target.has_chars(length))) {
+    
+                                                                LOG_DEBUG("...((\"" << chars << "\" = target.has_chars(" << length << ")))");
+                                                                LOG_DEBUG("(0 < (count = sk.send(\"" << chars << "\", " << length << ", 0)))...");
+                                                                if (0 < (count = sk.send(chars, length, 0))) {
+                                                                    LOG_DEBUG("...(0 < (" << count << " = sk.send(\"" << chars << "\", " << length << ", 0)))");
+                                                                } else {
+                                                                    LOG_DEBUG("...failed on (0 < (" << count << " = sk.send(\"" << chars << "\", " << length << ", 0)))");
+                                                                }
+                                                            } else {
+                                                                LOG_DEBUG("...failed on ((chars = target.has_chars(" << length << ")))");
+                                                            }
+                                                        } else {
+                                                            LOG_DEBUG("...failed on (!(" << err << " = before_send(\"" << target << "\", \"" << source << "\")))");
+                                                        }
+                                                    } else {
+                                                        LOG_DEBUG("...failed on (!(" << err << " = on_after_receive(\"" << target << "\", \"" << source << "\")))");
+                                                    }
+                                                } else {
+                                                    LOG_DEBUG("...failed on (!(" << err << " = on_begin_receive(receive_chars_, " << amount << ")))");
+                                                }
+                                            } else {
+                                                LOG_DEBUG("...failed on (!(" << err << " = on_begin_receive(receive_chars_, " << count << ")))");
+                                            }
+                                        } else {
+                                            LOG_DEBUG("...failed on (0 < (count = sk.recv(receive_chars_, " << count << ", 0)))");
+                                        }
+                                        LOG_DEBUG("sk.close()...");
+                                        sk.close();
+                                    } else {
+                                        LOG_DEBUG("...failed on (!(done = !(s.accept(sk, *ep))))");
+                                    }
+                                } else {
+                                    LOG_DEBUG("...failed on (!(done = !(sk.closed())))");
+                                }
+                            }
+                            LOG_DEBUG("...} for (bool done = false; !done; )");
+                        } else {
+                            LOG_DEBUG("... failed on ((s.listen(*ep)))");
+                        }
+                        LOG_DEBUG("s.close()...");
+                        s.close();
+                    }
+                    LOG_DEBUG("delete tp...");
+                    delete tp;
+                }
+                LOG_DEBUG("delete ep...");
+                delete ep;
+            }
+            LOG_DEBUG("host_.assign(old_host)...");
+            host_.assign(old_host);
+        } else {}        
+        return err;
+    }
+    virtual int before_Accept(string &target, const string &source) {
+        int err = 0;
+        xos::network::sockets::os::interfaces& sockets = this->sockets();
+        LOG_DEBUG("((sockets.startup()))...");
+        if ((sockets.startup())) {
+            LOG_DEBUG("...((sockets.startup()))");
+        } else {
+            LOG_DEBUG("...failed on ((sockets.startup()))");
+        }
+        return err;
+    }
+    virtual int after_Accept(string &target, const string &source) {
+        int err = 0;
+        xos::network::sockets::os::interfaces& sockets = this->sockets();
+        LOG_DEBUG("((sockets.cleanup()))...");
+        if ((sockets.cleanup())) {
+            LOG_DEBUG("...((sockets.cleanup()))");
+        } else {
+            LOG_DEBUG("...failed on ((sockets.cleanup()))");
+        }
+        return err;
+    }
+    virtual int all_Accept(string &target, const string &source) {
+        int err = 0;
+        if (!(err = before_Accept(target, source))) {
+            int err2 = 0;
+            err = Accept(target, source);
+            if ((err2 = after_Accept(target, source))) {
+                if (!(err)) err = err2;
+            }
+        }
+        return err;
+    }
+    virtual int all_AcceptOne(string &target, const string &source) {
+        int err = 0;
+        bool old_accept_one = accept_one_;
+        accept_one_ = true;
+        if (!(err = before_Accept(target, source))) {
+            int err2 = 0;
+            err = Accept(target, source);
+            if ((err2 = after_Accept(target, source))) {
+                if (!(err)) err = err2;
+            }
+        }
+        accept_one_ = old_accept_one;
+        return err;
+    }
+    //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
     /// ...Connect
@@ -244,6 +482,8 @@ protected:
         }
         return err;
     }
+    ///////////////////////////////////////////////////////////////////////
+
     ///////////////////////////////////////////////////////////////////////
     virtual int before_send(string &target, const string &source) {
         int err = 0;

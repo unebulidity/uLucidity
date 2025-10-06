@@ -23,6 +23,8 @@
 
 #include "uLucidity/Application/Console/Network/Sockets/Base/MainOpt.hh"
 #include "uLucidity/Application/Network/Sockets/Base/Main.hh"
+#include "uLucidity/Application/Network/Sockets/Client/Main.hh"
+#include "uLucidity/Application/Network/Sockets/Server/Main.hh"
 
 #define ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_UDENTIFY_DEFAULT_REQUEST \
     "{\"password\":{\"user\":\"user\",\"resource\":\"resource\",\"password\":\"password\"}}"
@@ -81,7 +83,7 @@ protected:
     //////////////////////////////////////////////////////////////////////////
 protected:
     string request_, response_;
-    uLucidity::Application::Network::Sockets::Base::Main main_;
+    uLucidity::Application::Network::Sockets::Client::Main main_;
 }; /// class Maint
 typedef Maint<> Main;
 
