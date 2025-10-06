@@ -24,6 +24,11 @@
 #include "xos/base/base.hpp"
 #include "xos/base/logged.hpp"
 
+#if !defined(XOS_BASE_2STRING)
+#define XOS_BASE_2STRINGX(value) "" #value ""
+#define XOS_BASE_2STRING(value) XOS_BASE_2STRINGX(value)
+#endif /// !defined(XOS_BASE_2STRING)
+
 namespace uLucidity {
 
 ///////////////////////////////////////////////////////////////////////

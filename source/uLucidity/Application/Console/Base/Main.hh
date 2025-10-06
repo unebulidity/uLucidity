@@ -37,6 +37,10 @@ public:
     typedef TExtends Extends;
     typedef Maint Derives;
 
+    typedef typename Extends::string string;
+    typedef typename Extends::string_t string_t;
+    typedef typename Extends::string_t::char_t char_t;
+    
     //////////////////////////////////////////////////////////////////////////
     /// constructor / destructor
     Maint(): run_(0) {

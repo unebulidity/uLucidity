@@ -40,11 +40,19 @@
 #else /// !defined(WINSOCK_1)
 #endif /// !defined(WINSOCK_1)
 
-#define XOS_APP_CONSOLE_NETWORK_SOCKETS_ACCEPT_HOST "*"
-#define XOS_APP_CONSOLE_NETWORK_SOCKETS_ACCEPT_PORT 8080
+#define ULUCIDITY_NETWORK_SOCKETS_BASE_RECEIVE_SIZE 4096
+#define ULUCIDITY_NETWORK_SOCKETS_BASE_PORTNO 8484
+#define ULUCIDITY_NETWORK_SOCKETS_BASE_PORT XOS_BASE_2STRING(ULUCIDITY_NETWORK_SOCKETS_BASE_PORTNO)
+#define ULUCIDITY_NETWORK_SOCKETS_BASE_HOST "udentify"
+#define ULUCIDITY_NETWORK_SOCKETS_BASE_ANY_HOST "*"
+#define ULUCIDITY_NETWORK_SOCKETS_BASE_ACCEPT_HOST ULUCIDITY_NETWORK_SOCKETS_BASE_ANY_HOST
+#define ULUCIDITY_NETWORK_SOCKETS_BASE_ENDOF_MESSAGE_TO_SEND "\r\n"
 
-#define XOS_APP_CONSOLE_NETWORK_SOCKETS_CONNECT_HOST "localhost"
-#define XOS_APP_CONSOLE_NETWORK_SOCKETS_CONNECT_PORT 80
+#define XOS_APP_CONSOLE_NETWORK_SOCKETS_ACCEPT_HOST ULUCIDITY_NETWORK_SOCKETS_BASE_ANY_HOST
+#define XOS_APP_CONSOLE_NETWORK_SOCKETS_ACCEPT_PORT ULUCIDITY_NETWORK_SOCKETS_BASE_PORTNO
+
+#define XOS_APP_CONSOLE_NETWORK_SOCKETS_CONNECT_HOST ULUCIDITY_NETWORK_SOCKETS_BASE_HOST
+#define XOS_APP_CONSOLE_NETWORK_SOCKETS_CONNECT_PORT XOS_APP_CONSOLE_NETWORK_SOCKETS_ACCEPT_PORT
 
 #define XOS_APP_CONSOLE_NETWORK_SOCKETS_RELAY_HOST XOS_APP_CONSOLE_NETWORK_SOCKETS_CONNECT_HOST
 #define XOS_APP_CONSOLE_NETWORK_SOCKETS_RELAY_PORT XOS_APP_CONSOLE_NETWORK_SOCKETS_CONNECT_PORT
@@ -78,7 +86,16 @@ public:
       relay_host_(XOS_APP_CONSOLE_NETWORK_SOCKETS_RELAY_HOST),
       accept_port_(XOS_APP_CONSOLE_NETWORK_SOCKETS_ACCEPT_PORT), 
       connect_port_(XOS_APP_CONSOLE_NETWORK_SOCKETS_CONNECT_PORT),
-      relay_port_(XOS_APP_CONSOLE_NETWORK_SOCKETS_RELAY_PORT) {
+      relay_port_(XOS_APP_CONSOLE_NETWORK_SOCKETS_RELAY_PORT),
+      send_(&Derives::tcp_send),
+      epoint_(&Derives::ip_v4_epoint),
+      tport_(&Derives::ip_v4_tcp_tport),
+      portno_(ULUCIDITY_NETWORK_SOCKETS_BASE_PORTNO),
+      port_(ULUCIDITY_NETWORK_SOCKETS_BASE_PORT),
+      host_(ULUCIDITY_NETWORK_SOCKETS_BASE_HOST),
+      any_host_(ULUCIDITY_NETWORK_SOCKETS_BASE_ANY_HOST),
+      endof_message_to_send_(ULUCIDITY_NETWORK_SOCKETS_BASE_ENDOF_MESSAGE_TO_SEND)
+    {
     }
     virtual ~Maint() {
     }
@@ -87,6 +104,12 @@ private:
     }
 public:
 protected:
+    typedef int (Derives::*send_t)
+    (xos::network::sockets::interface& s, xos::network::sockets::endpoint& ep, const char_t* chars, size_t length);
+    typedef xos::network::sockets::endpoint* (Derives::*endpoint_t)();
+    typedef xos::network::sockets::transport* (Derives::*transport_t)();
+    typedef xos::exception endpoint_exception_t;
+    typedef xos::exception transport_exception_t;
 
     //////////////////////////////////////////////////////////////////////////
     /// ...Run
@@ -94,24 +117,30 @@ protected:
     virtual int Run(string &target, const string &source) {
         int err = 0;
         if (Run_) {
-            LOGGER_IS_LOGGED_INFO("(!(err = (this->*Run_)(target, source)))...");
+            LOGGER_IS_LOGGED_INFO("(!(err = (this->*Run_)(\"" << target << "\", \"" << source << "\")))...");
             if (!(err = (this->*Run_)(target, source))) {
-                LOGGER_IS_LOGGED_INFO("...(!(" << err << " = (this->*Run_)(target, source)))");
+                LOGGER_IS_LOGGED_INFO("...(!(" << err << " = (this->*Run_)(\"" << target << "\", \"" << source << "\")))");
             } else {
-                LOGGER_IS_LOGGED_INFO("...failed on (!(" << err << " = (this->*Run_)(target, source)))");
+                LOGGER_IS_LOGGED_INFO("...failed on (!(" << err << " = (this->*Run_)(\"" << target << "\", \"" << source << "\")))");
             }
         } else {
-            LOGGER_IS_LOGGED_INFO("(!(err = default_Run(target, source)))...");
+            LOGGER_IS_LOGGED_INFO("(!(err = default_Run(\"" << target << "\", \"" << source << "\")))...");
             if (!(err = default_Run(target, source))) {
-                LOGGER_IS_LOGGED_INFO("...(!(" << err << " = default_Run(target, source)))");
+                LOGGER_IS_LOGGED_INFO("...(!(" << err << " = default_Run(\"" << target << "\", \"" << source << "\")))");
             } else {
-                LOGGER_IS_LOGGED_INFO("...failed on(!(" << err << " = default_Run(target, source)))");
+                LOGGER_IS_LOGGED_INFO("...failed on(!(" << err << " = default_Run(\"" << target << "\", \"" << source << "\")))");
             }
         }
         return err;
     }
     virtual int default_Run(string &target, const string &source) {
         int err = 0;
+        LOGGER_IS_LOGGED_INFO("(!(err = all_Connect(\"" << target << "\", \"" << source << "\")))...");
+        if (!(err = all_Connect(target, source))) {
+            LOGGER_IS_LOGGED_INFO("...(!(" << err << " = all_Connect(\"" << target << "\", \"" << source << "\")))");
+        } else {
+            LOGGER_IS_LOGGED_INFO("...failed on(!(" << err << " = all_Connect(\"" << target << "\", \"" << source << "\")))");
+        }
         return err;
     }
     virtual int before_Run(string &target, const string &source) {
@@ -135,6 +164,206 @@ public:
         return err;
     }
 protected:
+
+    //////////////////////////////////////////////////////////////////////////
+    /// ...Connect
+    virtual int Connect(string &target, const string &source) {
+        int err = 0;
+        send_t send = 0;
+
+        LOG_DEBUG("((send = (this->send_)))...");
+        if ((send = (this->send_))) {
+            string target(source);
+
+            LOG_DEBUG("(!(err = before_send(\"" << target << "\", \"" << source << "\")))...");
+            if (!(err = before_send(target, source))) {
+                const char* chars = 0;
+                size_t length = 0;
+
+                LOG_DEBUG("((chars = target.has_chars(length)))...");
+                if ((chars = target.has_chars(length))) {
+                    xos::network::sockets::endpoint* ep = 0;
+        
+                    LOG_DEBUG("((epoint_) && (ep = ((this->*epoint_)())))...");
+                    if ((epoint_) && (ep = ((this->*epoint_)()))) {
+                        xos::network::sockets::transport* tp = 0;
+        
+                        LOG_DEBUG("((tport_) && (tp = (this->*tport_)()))...");
+                        if ((tport_) && (tp = (this->*tport_)())) {
+                            xos::network::sockets::os::interface s;
+        
+                            LOG_DEBUG("if ((s.open(*tp)))...");
+                            if ((s.open(*tp))) {
+
+                                LOG_DEBUG("(this->*send)(s, *ep, chars, length)...");
+                                (this->*send)(s, *ep, chars, length);
+                                LOG_DEBUG("s.close()...");
+                                s.close();
+                            }
+                            LOG_DEBUG("delete tp...");
+                            delete tp;
+                        }
+                        LOG_DEBUG("delete ep...");
+                        delete ep;
+                    }
+                } else {}
+            } else {}
+        } else {}        
+        return err;
+    }
+    virtual int before_Connect(string &target, const string &source) {
+        int err = 0;
+        xos::network::sockets::os::interfaces& sockets = this->sockets();
+        LOG_DEBUG("((sockets.startup()))...");
+        if ((sockets.startup())) {
+            LOG_DEBUG("...((sockets.startup()))");
+        } else {
+            LOG_DEBUG("...failed on ((sockets.startup()))");
+        }
+        return err;
+    }
+    virtual int after_Connect(string &target, const string &source) {
+        int err = 0;
+        xos::network::sockets::os::interfaces& sockets = this->sockets();
+        LOG_DEBUG("((sockets.cleanup()))...");
+        if ((sockets.cleanup())) {
+            LOG_DEBUG("...((sockets.cleanup()))");
+        } else {
+            LOG_DEBUG("...failed on ((sockets.cleanup()))");
+        }
+        return err;
+    }
+    virtual int all_Connect(string &target, const string &source) {
+        int err = 0;
+        if (!(err = before_Connect(target, source))) {
+            int err2 = 0;
+            err = Connect(target, source);
+            if ((err2 = after_Connect(target, source))) {
+                if (!(err)) err = err2;
+            }
+        }
+        return err;
+    }
+    ///////////////////////////////////////////////////////////////////////
+    virtual int before_send(string &target, const string &source) {
+        int err = 0;
+        const char_t cr = ((char_t)'\r'), lf = ((char_t)'\n');
+        const char* chars = 0;
+        size_t length = 0;
+
+        LOG_DEBUG("((chars = source.has_chars(length)))...");
+        if ((chars = source.has_chars(length))) {
+
+            LOG_DEBUG("...((\"" << chars << "\" = source.has_chars(" << length << ")))");
+            LOG_DEBUG("for (size_t index = " << length << "; index; --index) {...");
+            for (size_t index = length; index; --index) {
+                char_t ch = chars[index - 1];
+                if ((lf != ch) && ((cr != ch))) {
+
+                    LOG_DEBUG("((index = " << index << " < length = " << length << "))...");
+                    if ((index < length)) {
+
+                        LOG_DEBUG("target.assign(\"" << chars << "\", " << index << ")...");
+                        target.assign(chars, index);
+                    } else {}
+                    break;
+                }
+            }
+        } else {
+            LOG_DEBUG("...failed on ((chars = source.has_chars(" << length << ")))");
+        }
+        LOG_DEBUG("target.append(\"" << endof_message_to_send_ << "\")...");
+        target.append(endof_message_to_send_);
+        return err;
+    }
+    ///////////////////////////////////////////////////////////////////////
+    virtual int tcp_send
+    (xos::network::sockets::interface& s, xos::network::sockets::endpoint& ep, const char_t* chars, size_t length) {
+        int err = 0;
+
+        LOG_DEBUG("((s.connect(ep)))...");
+        if ((s.connect(ep))) {
+            ssize_t count = 0;
+
+            LOG_DEBUG("(0 < (count = s.send(\"" << chars << "\", " << length << ", 0)))...");
+            if (0 < (count = s.send(chars, length, 0))) {
+
+                LOG_DEBUG("...(0 < (" << count << " = s.send(\"" << chars << "\", " << length << ", 0)))");
+                LOG_DEBUG("(0 < (count = s.recv(receive_chars_, " << sizeof(receive_chars_) << ", 0)))...");
+                if (0 < (count = s.recv(receive_chars_, sizeof(receive_chars_), 0))) {
+                    size_t amount = count;
+
+                    LOG_DEBUG("(!(err = on_begin_receive(receive_chars_, " << count << ")))...");
+                    if (!(err = on_begin_receive(receive_chars_, count))) {
+
+                        LOG_DEBUG("...(!(" << err << " = on_begin_receive(receive_chars_, " << count << ")))");
+                        do {
+                            LOG_DEBUG("(0 < (count = s.recv(receive_chars_, " << sizeof(receive_chars_) << ", 0)))...");
+                            if (0 < (count = s.recv(receive_chars_, sizeof(receive_chars_), 0))) {
+                                LOG_DEBUG("(!(err = on_receive(receive_chars_, " << count << ")))...");
+                                if (!(err = on_receive(receive_chars_, count))) {
+                                    LOG_DEBUG("...(!(" << err << " = on_receive(receive_chars_, " << count << ")))");
+                                    continue;
+                                } else {
+                                    LOG_DEBUG("...failed on (!(" << err << " = on_receive(receive_chars_, " << count << ")))");
+                                    break;
+                                }
+                            } else {
+                                LOG_DEBUG("...failed on (0 < (count = s.recv(receive_chars_, " << count << ", 0)))");
+                            }
+                            break;
+                        } while (0 < count);
+
+                        LOG_DEBUG("(!(err = on_end_receive(receive_chars_, " << amount << ")))...");
+                        if (!(err = on_end_receive(receive_chars_, amount))) {
+                            LOG_DEBUG("...(!(" << err << " = on_end_receive(receive_chars_, " << amount << ")))");
+                        } else {
+                            LOG_DEBUG("...failed on (!(" << err << " = on_begin_receive(receive_chars_, " << amount << ")))");
+                        }
+                    } else {
+                        LOG_DEBUG("...failed on (!(" << err << " = on_begin_receive(receive_chars_, " << count << ")))");
+                    }
+                } else {
+                    LOG_DEBUG("...failed on (0 < (count = s.recv(receive_chars_, " << count << ", 0)))");
+                }
+            } else {
+                LOG_ERROR("...failed on (0 < (" << count << " = s.send(\"" << chars << "\", " << length << ", 0)))");
+            }
+        } else {
+            LOG_DEBUG("...failed on ((s.connect(ep)))");
+        }
+        return 0;
+    }
+    virtual int udp_send
+    (xos::network::sockets::interface& s, xos::network::sockets::endpoint& ep, const char_t* chars, size_t length) {
+        ssize_t count = 0;
+
+        LOG_DEBUG("(0 < (count = s.sendto(\"" << chars << "\", " << length << ", 0, ep)))...");
+        if (0 < (count = s.sendto(chars, length, 0, ep))) {
+            LOG_DEBUG("...(0 < (" << count << " = s.sendto(\"" << chars << "\", " << length << ", 0, ep)))");
+        } else {
+            LOG_ERROR("... failed on (0 < (" << count << " = s.sendto(\"" << chars << "\", " << length << ", 0, ep)))");
+        }
+        return 0;
+    }
+    ///////////////////////////////////////////////////////////////////////
+    virtual int on_receive(char_t* chars, size_t length) { 
+        int err = 0;
+        return err;
+    }
+    virtual int on_begin_receive(char_t* chars, size_t length) { 
+        int err = 0;
+        return err;
+    }
+    virtual int on_end_receive(char_t* chars, size_t length) { 
+        int err = 0;
+        return err;
+    }
+    virtual int on_after_receive(string &target, const string &source) {
+        int err = 0;
+        return err;
+    }
+    ///////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
     /// ..host / ..port
@@ -411,6 +640,9 @@ protected:
     /// ...iface / ...addr / ...ep/ ...tp
     /// ...
     /// ...os_iface
+    virtual xos::network::sockets::os::interfaces& sockets() const {
+        return (xos::network::sockets::os::interfaces&)sockets_;
+    }
     virtual xos::network::sockets::os::interface& accept_os_iface() const {
         return (xos::network::sockets::os::interface&)accept_os_iface_;
     }
@@ -513,13 +745,91 @@ protected:
     }
     //////////////////////////////////////////////////////////////////////////
 
+    ///////////////////////////////////////////////////////////////////////
+    virtual xos::network::sockets::transport* ip_v4_tcp_tport() {
+        xos::network::sockets::transport* tp = new xos::network::sockets::ip::v4::tcp::transport();
+        return tp;
+    }
+    virtual xos::network::sockets::transport* ip_v4_udp_tport() {
+        xos::network::sockets::transport* tp = new xos::network::sockets::ip::v4::udp::transport();
+        return tp;
+    }
+    ///////////////////////////////////////////////////////////////////////
+    virtual xos::network::sockets::transport* ip_v6_tcp_tport() {
+        xos::network::sockets::transport* tp = new xos::network::sockets::ip::v6::tcp::transport();
+        return tp;
+    }
+    virtual xos::network::sockets::transport* ip_v6_udp_tport() {
+        xos::network::sockets::transport* tp = new xos::network::sockets::ip::v6::udp::transport();
+        return tp;
+    }
+    ///////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////
+    virtual xos::network::sockets::endpoint* ip_v4_epoint() {
+        const char_t* host = 0;
+        ushort port = 0;
+        int unequal = 0;
+        try {
+            if ((host = host_.has_chars()) && (0 < (port = portno_))) {
+                if (!(unequal = host_.compare(any_host_))) {
+                    xos::network::sockets::endpoint* ep = new xos::network::sockets::ip::v4::endpoint(port);
+                    return ep;
+                } else{
+                    xos::network::sockets::endpoint* ep = new xos::network::sockets::ip::v4::endpoint(host, port);
+                    return ep;
+                }
+            } else {
+                if ((0 < (port = portno_))) {
+                    xos::network::sockets::endpoint* ep = new xos::network::sockets::ip::v4::endpoint(port);
+                    return ep;
+                }
+            }
+        } catch(endpoint_exception_t){
+            return 0;
+        }
+        return 0;
+    }
+    ///////////////////////////////////////////////////////////////////////
+    virtual xos::network::sockets::endpoint* ip_v6_epoint() {
+        const char_t* host = 0;
+        ushort port = 0;
+        int unequal = 0;
+        try {
+            if ((host = host_.has_chars()) && (0 < (port = portno_))) {
+                if (!(unequal = host_.compare(any_host_))) {
+                    xos::network::sockets::endpoint* ep = new xos::network::sockets::ip::v6::endpoint(port);
+                    return ep;
+                } else{
+                    xos::network::sockets::endpoint* ep = new xos::network::sockets::ip::v6::endpoint(host, port);
+                    return ep;
+                }
+            } else {
+                if ((0 < (port = portno_))) {
+                    xos::network::sockets::endpoint* ep = new xos::network::sockets::ip::v6::endpoint(port);
+                    return ep;
+                }
+            }
+        } catch(endpoint_exception_t){
+            return 0;
+        }
+        return 0;
+    }
+    ///////////////////////////////////////////////////////////////////////
+
     //////////////////////////////////////////////////////////////////////////
 protected:
     bool restart_, stop_;
     bool accept_one_, accept_done_, accept_restart_;
     string_t accept_host_, connect_host_, relay_host_;
     short accept_port_, connect_port_, relay_port_;
+    send_t send_;
+    endpoint_t epoint_;
+    transport_t tport_;
+    ushort portno_;
+    string_t port_, host_, any_host_, endof_message_to_send_;
 
+    xos::network::sockets::os::interfaces sockets_;
     xos::network::sockets::os::interface accept_os_iface_, connect_os_iface_, relay_os_iface_;
     xos::network::sockets::interface accept_iface_, connect_iface_, relay_iface_;
 
@@ -536,6 +846,7 @@ protected:
     xos::network::sockets::ip::v6::udp::transport ip_v6_udp_tp_;
 #else /// !defined(WINSOCK_1)
 #endif /// !defined(WINSOCK_1)
+    char_t receive_chars_[ULUCIDITY_NETWORK_SOCKETS_BASE_RECEIVE_SIZE];
 }; /// class Maint
 typedef Maint<> Main;
 
