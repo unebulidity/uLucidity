@@ -44,7 +44,7 @@ public:
 
     //////////////////////////////////////////////////////////////////////////
     /// constructor / destructor
-    Maint() {
+    Maint(): AcceptOne_(false) {
     }
     virtual ~Maint() {
     }
@@ -52,21 +52,48 @@ private:
     Maint(const Maint &copy): Extends(copy) {
     }
 public:
+protected:
 
     //////////////////////////////////////////////////////////////////////////
     virtual int default_Run(string &target, const string &source) {
         int err = 0;
-        LOGGER_IS_LOGGED_INFO("(!(err = this->all_AcceptOne(\"" << target << "\", \"" << source << "\")))...");
-        if (!(err = this->all_AcceptOne(target, source))) {
-            LOGGER_IS_LOGGED_INFO("...(!(" << err << " = this->all_AcceptOne(\"" << target << "\", \"" << source << "\")))");
+        const bool& AcceptOne = this->AcceptOne();
+        if ((AcceptOne)) {
+            LOGGER_IS_LOGGED_INFO("(!(err = this->all_AcceptOne(\"" << target << "\", \"" << source << "\")))...");
+            if (!(err = this->all_AcceptOne(target, source))) {
+                LOGGER_IS_LOGGED_INFO("...(!(" << err << " = this->all_AcceptOne(\"" << target << "\", \"" << source << "\")))");
+            } else {
+                LOGGER_IS_LOGGED_INFO("...failed on(!(" << err << " = this->all_AcceptOne(\"" << target << "\", \"" << source << "\")))");
+            }
         } else {
-            LOGGER_IS_LOGGED_INFO("...failed on(!(" << err << " = this->all_AcceptOne(\"" << target << "\", \"" << source << "\")))");
+            LOGGER_IS_LOGGED_INFO("(!(err = this->all_Accept(\"" << target << "\", \"" << source << "\")))...");
+            if (!(err = this->all_Accept(target, source))) {
+                LOGGER_IS_LOGGED_INFO("...(!(" << err << " = this->all_Accept(\"" << target << "\", \"" << source << "\")))");
+            } else {
+                LOGGER_IS_LOGGED_INFO("...failed on(!(" << err << " = this->all_Accept(\"" << target << "\", \"" << source << "\")))");
+            }
         }
         return err;
     }
+public:
+    virtual bool& set_Accept(const bool& to = true) {
+        bool& AcceptOne = this->AcceptOne();
+        AcceptOne = !to;
+        return AcceptOne;
+    }
+    virtual bool& set_AcceptOne(const bool& to = true) {
+        bool& AcceptOne = this->AcceptOne();
+        AcceptOne = to;
+        return AcceptOne;
+    }
+    virtual bool& AcceptOne() const {
+        return (bool&)AcceptOne_;
+    }
+protected:
 
     //////////////////////////////////////////////////////////////////////////
 protected:
+    bool AcceptOne_;
 }; /// class Maint
 typedef Maint<> Main;
 

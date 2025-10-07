@@ -69,8 +69,45 @@ public:
 protected:
 
     //////////////////////////////////////////////////////////////////////////
+    /// ...default_run
+    int (Derives::*default_run_)(int argc, char_t** argv, char_t** env);
     virtual int default_run(int argc, char_t** argv, char_t** env) {
         int err = 0;
+        if (default_run_) {
+            LOGGER_IS_LOGGED_INFO("(!(err = (this->*default_run_)(argc, argv, env)))...");
+            if (!(err = (this->*default_run_)(argc, argv, env))) {
+                LOGGER_IS_LOGGED_INFO("...(!(" << err << " = (this->*default_run_)(argc, argv, env)))");
+            } else {
+                LOGGER_IS_LOGGED_INFO("...failed on (!(" << err << " = (this->*default_run_)(argc, argv, env)))");
+            }
+        } else {
+            LOGGER_IS_LOGGED_INFO("(!(err = default_default_run(argc, argv, env)))...");
+            if (!(err = default_default_run(argc, argv, env))) {
+                LOGGER_IS_LOGGED_INFO("...(!(" << err << " = default_default_run(argc, argv, env)))");
+            } else {
+                LOGGER_IS_LOGGED_INFO("...failed on(!(" << err << " = default_default_run(argc, argv, env)))");
+            }
+        }
+        return err;
+    }
+    virtual int default_default_run(int argc, char_t** argv, char_t** env) {
+        int err = 0;
+        LOGGER_IS_LOGGED_INFO("(!(err = extends::default_run(argc, argv, env)))...");
+        if (!(err = Extends::default_run(argc, argv, env))) {
+            LOGGER_IS_LOGGED_INFO("...(!(" << err << " = extends::default_run(argc, argv, env)))");
+        } else {
+            LOGGER_IS_LOGGED_INFO("...failed on (!(" << err << " = extends::default_run(argc, argv, env)))");
+        }
+        return err;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    /// ...main_run
+    virtual int main_run(int argc, char_t** argv, char_t** env) {
+        int err = 0;
+        string& request_ = this->request();
+        string& response_ = this->response();
+        uLucidity::Application::Network::Sockets::Base::Main& main_ = this->main();
+        
         LOGGER_IS_LOGGED_INFO("(!(err = main_.all_Run(response_ = \"" << response_ << "\", request_ = \"" << request_ << "\")))...");
         if (!(err = main_.all_Run(response_, request_))) {
             LOGGER_IS_LOGGED_INFO("...(!(" << err << " = main_.all_Run(response_ = \"" << response_ << "\", request_ = \"" << request_ << "\")))");
@@ -79,11 +116,45 @@ protected:
         }
         return err;
     }
+    virtual int set_main_run(int argc, char_t** argv, char_t** env) {
+        int err = 0;
+        default_run_ = &Derives::main_run;
+        return err;
+    }
+    virtual int main_run_set(int argc, char_t** argv, char_t** env) {
+        int err = 0;
+        return err;
+    }
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    virtual string& set_request(const string& to) {
+        string& request = this->request();
+        request.assign(to);
+        return request;
+    }
+    virtual string& request() const {
+        return (string&)request_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    virtual string& set_response(const string& to) {
+        string& response = this->response();
+        response.assign(to);
+        return response;
+    }
+    virtual string& response() const {
+        return (string&)response_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    virtual uLucidity::Application::Network::Sockets::Base::Main& main() const {
+        return (uLucidity::Application::Network::Sockets::Base::Main&)main_;
+    }
+    //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
 protected:
     string request_, response_;
-    uLucidity::Application::Network::Sockets::Client::Main main_;
+    uLucidity::Application::Network::Sockets::Base::Main main_;
 }; /// class Maint
 typedef Maint<> Main;
 
