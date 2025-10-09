@@ -4,9 +4,9 @@
 ///   File: main.mm
 ///
 /// Author: $author$
-///   Date: 11/1/2022
+///   Date: 11/1/2022, 10/9/2025
 ///////////////////////////////////////////////////////////////////////
-#include "uLucidity/UI/Cocoa/main.hh"
+#include "uLucidity/UI/Cocoa/Main.hh"
 #include "uLucidity/UI/Cocoa/Logger.hh"
 
 #define ULUCIDITY_UI_PLUGIN_PREFIX "lib"
@@ -130,9 +130,9 @@
                     }
                 }
             }
-            LOG_DEBUG("[[Window alloc] initWithRect:contentRect]...");
-            if ((window = [[Window alloc] initWithRect:contentRect application:_application images:_images])) {
-                LOG_DEBUG("..." << String(window) << " = [[Window alloc] initWithRect:contentRect]");
+            LOG_DEBUG("((window = [self allocWindow:contentRect]))...");
+            if ((window = [self allocWindow:contentRect])) {
+                LOG_DEBUG("...((" << String(window) << " = [self allocWindow:contentRect]))");
                 [window setMinSize:_minWindowSize];
                 [window setMaxSize:_maxWindowSize];
                 if ((_plugin)) {
@@ -149,9 +149,19 @@
                 LOG_DEBUG("[window setNotResizeable]...");
                 [window setNotResizeable];
             } else {
-                LOG_ERROR("...failed " << String(window) << " = [[Window alloc] initWithRect:contentRect]");
+                LOG_ERROR("...failed on ((" << String(window) << " = [self allocWindow:contentRect]))");
             }
         } else {
+        }
+        return window;
+    }
+    - (Window*)allocWindow:(NSRect)contentRect {
+        Window* window = nil;
+        LOG_DEBUG("[[Window alloc] initWithRect:contentRect application:_application images:_images]...");
+        if ((window = [[Window alloc] initWithRect:contentRect application:_application images:_images])) {
+            LOG_DEBUG("..." << String(window) << " = [[Window alloc] initWithRect:contentRect application:_application images:_images]");
+        } else {
+            LOG_ERROR("...failed " << String(window) << " = [[Window alloc] initWithRect:contentRect application:_application images:_images]");
         }
         return window;
     }
@@ -238,6 +248,7 @@
 }
 @end
 
+/*
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 int main(int argc, char **argv, char **env) {
@@ -278,3 +289,4 @@ int main(int argc, char **argv, char **env) {
     }
     return err;
 }
+*/

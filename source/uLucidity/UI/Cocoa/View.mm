@@ -4,7 +4,7 @@
 ///   File: View.mm
 ///
 /// Author: $author$
-///   Date: 11/1/2022
+///   Date: 11/1/2022, 10/9/2025
 ///////////////////////////////////////////////////////////////////////
 #include "uLucidity/UI/Cocoa/View.hh"
 #include "uLucidity/UI/Cocoa/Signals.hh"
@@ -30,7 +30,10 @@
                 LOG_DEBUG("[self initButtons:rect]...");
                 if (([self initButtons:rect])) {
 
+                    LOG_DEBUG("((_content = [[Content alloc] initWithRect:[self contentRect:rect] application:application]))...");
                     if ((_content = [[Content alloc] initWithRect:[self contentRect:rect] application:application])) {
+
+                        LOG_DEBUG("[self addSubview:_content]...");
                         [self addSubview:_content];
                     } else {
                     }
@@ -234,20 +237,48 @@
     ///////////////////////////////////////////////////////////////////////
     - (void)logoClicked:(id)sender {
         Signals* handlers = Signals::handlers();
-        if ((handlers) && (handlers->onLogoClicked())) {
+        NSWindow* window = [self window];
+        if ((handlers) && (handlers->onLogoClicked()) && (window)) {
+            LOG_DEBUG("[self onHandlersLogoClicked:sender application:_application window:window]...");
+            [self onHandlersLogoClicked:sender application:_application window:window];
+        } else {
+            if ((window)) {
+                LOG_DEBUG("[self onLogoClicked:sender application:_application window:window]...");
+                [self onLogoClicked:sender application:_application window:window];
+            }
         }
+    }
+    - (void)onHandlersLogoClicked:(id)sender 
+        application:(NSApplication*)application window:(NSWindow*)window {
+    }
+    - (void)onLogoClicked:(id)sender 
+        application:(NSApplication*)application window:(NSWindow*)window {
     }
     - (void)maxClicked:(id)sender {
         Signals* handlers = Signals::handlers();
         NSWindow* window = [self window];
         [self selectButton:_maxB];
         if ((handlers) && (handlers->onMaximizeShutdownClicked()) && (window)) {
-            [_application stop:self];
+            //[_application stop:self];
+            LOG_DEBUG("[self onMaximizeShutdownClicked:sender application:_application window:window]...");
+            [self onMaximizeShutdownClicked:sender application:_application window:window];
         } else {
             if ((handlers) && (handlers->onMaximizeClicked()) && (window)) {
-                [window zoom:sender];
+                //[window zoom:sender];
+                LOG_DEBUG("[self onMaximizeClicked:sender application:_application window:window]...");
+                [self onMaximizeClicked:sender application:_application window:window];
             }
         }
+    }
+    - (void)onMaximizeShutdownClicked:(id)sender 
+        application:(NSApplication*)application window:(NSWindow*)window {
+        LOG_DEBUG("[application stop:self]...");
+        [application stop:self];
+    }
+    - (void)onMaximizeClicked:(id)sender 
+        application:(NSApplication*)application window:(NSWindow*)window {
+        LOG_DEBUG("[window zoom:sender]...");
+        [window zoom:sender];
     }
     - (void)minClicked:(id)sender {
         Signals* handlers = Signals::handlers();

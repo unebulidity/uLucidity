@@ -1,10 +1,10 @@
 ///////////////////////////////////////////////////////////////////////
 /// Copyright (c) 1988-2022 $organization$
 ///
-///   File: main.hh
+///   File: Main.hh
 ///
 /// Author: $author$
-///   Date: 11/1/2022
+///   Date: 11/1/2022, 10/9/2025
 ///////////////////////////////////////////////////////////////////////
 #ifndef ULUCIDITY_UI_COCOA_MAIN_HH
 #define ULUCIDITY_UI_COCOA_MAIN_HH
@@ -39,6 +39,7 @@
     ///////////////////////////////////////////////////////////////////////
     - (id<Main>)init:(NSApplication*)application;
     - (Window*)createWindow:(NSRect)contentRect;
+    - (Window*)allocWindow:(NSRect)contentRect;
     - (NSRect)contentRect;
     - (int)runApplication:(NSApplication*)application;
     - (int)run:(int)argc argv:(char**)argv env:(char**)env;

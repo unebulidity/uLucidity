@@ -31,9 +31,13 @@ namespace Server {
 
 //////////////////////////////////////////////////////////////////////////
 /// class Maint
-template <class TExtends = uLucidity::Application::Network::Sockets::Base::Main, class TImplements = typename TExtends::Implements>
+template 
+<class TEvents = uLucidity::Application::Network::Sockets::Base::Main::Events,
+ class TExtends = uLucidity::Application::Network::Sockets::Base::Main, 
+ class TImplements = typename TExtends::Implements>
 class exported Maint: virtual public TImplements, public TExtends {
 public:
+    typedef TEvents Events;
     typedef TImplements Implements;
     typedef TExtends Extends;
     typedef Maint Derives;
@@ -44,7 +48,8 @@ public:
 
     //////////////////////////////////////////////////////////////////////////
     /// constructor / destructor
-    Maint(): AcceptOne_(false) {
+    Maint(Events& events)
+    : events_(events), AcceptOne_(false) {
     }
     virtual ~Maint() {
     }
@@ -75,7 +80,31 @@ protected:
         }
         return err;
     }
+    ///////////////////////////////////////////////////////////////////////
+    virtual int on_receive(char_t* chars, size_t length) { 
+        int err = 0;
+        if (!(err = events_.on_receive(chars, length))) {} else {}
+        return err;
+    }
+    virtual int on_begin_receive(char_t* chars, size_t length) { 
+        int err = 0;
+        if (!(err = events_.on_begin_receive(chars, length))) {} else {}
+        return err;
+    }
+    virtual int on_end_receive(char_t* chars, size_t length) { 
+        int err = 0;
+        if (!(err = events_.on_end_receive(chars, length))) {} else {}
+        return err;
+    }
+    virtual int on_after_receive(string &target, const string &source) {
+        int err = 0;
+        if (!(err = events_.on_after_receive(target, source))) {} else {}
+        return err;
+    }
+    ///////////////////////////////////////////////////////////////////////
+
 public:
+    //////////////////////////////////////////////////////////////////////////
     virtual bool& set_Accept(const bool& to = true) {
         bool& AcceptOne = this->AcceptOne();
         AcceptOne = !to;
@@ -89,10 +118,12 @@ public:
     virtual bool& AcceptOne() const {
         return (bool&)AcceptOne_;
     }
+    //////////////////////////////////////////////////////////////////////////
 protected:
 
     //////////////////////////////////////////////////////////////////////////
 protected:
+    Events& events_;
     bool AcceptOne_;
 }; /// class Maint
 typedef Maint<> Main;

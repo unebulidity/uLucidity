@@ -32,16 +32,24 @@ namespace Client {
 
 //////////////////////////////////////////////////////////////////////////
 /// class Maint
-template <class TExtends = uLucidity::Application::Console::Network::Sockets::Client::MainOpt, class TImplements = typename TExtends::Implements>
-class exported Maint: virtual public TImplements, public TExtends {
+template 
+<class TEvents = uLucidity::Application::Network::Sockets::Base::Main::Events,
+ class TExtends = uLucidity::Application::Console::Network::Sockets::Client::MainOpt, 
+ class TImplements = typename TExtends::Implements>
+class exported Maint: virtual public TEvents, virtual public TImplements, public TExtends {
 public:
+    typedef TEvents Events;
     typedef TImplements Implements;
     typedef TExtends Extends;
     typedef Maint Derives;
 
+    typedef typename Extends::string string;
+    typedef typename Extends::string_t string_t;
+    typedef typename Extends::string_t::char_t char_t;
+    
     //////////////////////////////////////////////////////////////////////////
     /// constructor / destructor
-    Maint() {
+    Maint(): main_(*this) {
     }
     virtual ~Maint() {
     }
@@ -49,6 +57,27 @@ private:
     Maint(const Maint &copy): Extends(copy) {
     }
 public:
+
+    //////////////////////////////////////////////////////////////////////////
+    /// on...receive
+    virtual int on_receive(char_t* chars, size_t length) { 
+        int err = 0;
+        return err;
+    }
+    virtual int on_begin_receive(char_t* chars, size_t length) { 
+        int err = 0;
+        return err;
+    }
+    virtual int on_end_receive(char_t* chars, size_t length) { 
+        int err = 0;
+        this->outln(chars, length);
+        return err;
+    }
+    virtual int on_after_receive(string &target, const string &source) {
+        int err = 0;
+        return err;
+    }
+    //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
     /// on...connect_option...

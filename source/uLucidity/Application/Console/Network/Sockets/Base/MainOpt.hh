@@ -21,7 +21,7 @@
 #ifndef ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_BASE_MAINOPT_HH
 #define ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_BASE_MAINOPT_HH
 
-#include "uLucidity/Application/Console/Base/Main.hh"
+#include "uLucidity/Application/Console/Protocol/Base/Main.hh"
 
 ///////////////////////////////////////////////////////////////////////
 #define ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_UDENTIFY_BASE_MAIN_HOST_OPT "host"
@@ -111,7 +111,7 @@ namespace Base {
 
 //////////////////////////////////////////////////////////////////////////
 /// class MainOptt
-template <class TExtends = uLucidity::Application::Console::Base::Main, class TImplements = typename TExtends::Implements>
+template <class TExtends = uLucidity::Application::Console::Protocol::Base::Main, class TImplements = typename TExtends::Implements>
 class exported MainOptt: virtual public TImplements, public TExtends {
 public:
     typedef TImplements Implements;

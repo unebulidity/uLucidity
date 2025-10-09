@@ -4,7 +4,7 @@
 ///   File: Window.mm
 ///
 /// Author: $author$
-///   Date: 11/1/2022
+///   Date: 11/1/2022, 10/9/2025
 ///////////////////////////////////////////////////////////////////////
 #include "uLucidity/UI/Cocoa/Window.hh"
 #include "uLucidity/UI/Cocoa/Logger.hh"
@@ -30,7 +30,8 @@
         if ((superId = [super initWithContentRect:rect styleMask:style backing:backing defer:defer])) {
 
             LOG_DEBUG("[[View alloc] initWithRect:viewRect application:application images:_images]...");
-            if ((_view = [[View alloc] initWithRect:viewRect application:application images:_images])) {
+            //if ((_view = [[View alloc] initWithRect:viewRect application:application images:_images])) {
+            if ((_view = [self allocView:viewRect])) {
 
                 LOG_DEBUG("[self = " << String(self) << " setContentView:_view = " << String(_view) << "]...");
                 [self setContentView:_view];
@@ -54,6 +55,17 @@
             LOG_ERROR("...failed " << String(superId) << " = [super initWithContentRect:rect styleMask:style backing:backing defer:defer]");
         }
         return nil;
+    }
+
+    - (View*)allocView:(NSRect)withRect {
+        View* view = nil;
+        LOG_DEBUG("((view = [[View alloc] initWithRect:withRect application:_application images:_images]))...");
+        if ((view = [[View alloc] initWithRect:withRect application:_application images:_images])) {
+            LOG_DEBUG("...((view = [[View alloc] initWithRect:withRect application:_application images:_images]))");
+        } else {
+            LOG_DEBUG("failed on ((view = [[View alloc] initWithRect:withRect application:_application images:_images]))");
+        }
+        return view;
     }
 
     - (Window*)setNotResizeable {

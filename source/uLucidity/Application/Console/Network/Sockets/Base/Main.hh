@@ -26,12 +26,13 @@
 #include "uLucidity/Application/Network/Sockets/Client/Main.hh"
 #include "uLucidity/Application/Network/Sockets/Server/Main.hh"
 
+/*
 #define ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_UDENTIFY_DEFAULT_REQUEST \
     "{\"password\":{\"user\":\"user\",\"resource\":\"resource\",\"password\":\"password\"}}"
 
 #define ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_UDENTIFY_DEFAULT_RESPONSE \
     "{\"password\":\"unknown\"}"
-
+*/
 namespace uLucidity {
 namespace Application {
 namespace Console {
@@ -57,8 +58,12 @@ public:
     //////////////////////////////////////////////////////////////////////////
     /// constructor / destructor
     Maint()
-    : request_(ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_UDENTIFY_DEFAULT_REQUEST),
-      response_(ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_UDENTIFY_DEFAULT_RESPONSE) {
+    : /*
+      request_(ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_UDENTIFY_DEFAULT_REQUEST),
+      response_(ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_UDENTIFY_DEFAULT_RESPONSE)
+      */
+      request_(this->udentify_request_message()), 
+      response_(this->udentify_response_message()) {
     }
     virtual ~Maint() {
     }
