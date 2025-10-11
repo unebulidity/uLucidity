@@ -16,44 +16,45 @@
 ///   File: Main.hh
 ///
 /// Author: $author$
-///   Date: 10/5/2025
+///   Date: 10/10/2025
 //////////////////////////////////////////////////////////////////////////
-#ifndef ULUCIDITY_APPLICATION_BASE_MAIN_HH
-#define ULUCIDITY_APPLICATION_BASE_MAIN_HH
+#ifndef ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_NETWORK_SOCKETS_SERVER_MAIN_HH
+#define ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_NETWORK_SOCKETS_SERVER_MAIN_HH
 
-#include "uLucidity/Base/Base.hh"
-#include "xos/base/string.hpp"
-#include "xos/base/logger.hpp"
-
-#define LOG_ANY   LOGGER_LOG_ANY  
-#define LOG_FATAL LOGGER_LOG_FATAL
-#define LOG_ERROR LOGGER_LOG_ERROR
-#define LOG_WARN  LOGGER_LOG_WARN 
-#define LOG_INFO  LOGGER_LOG_INFO 
-#define LOG_DEBUG LOGGER_LOG_DEBUG
-#define LOG_TRACE LOGGER_LOG_TRACE
+#include "uLucidity/Application/Network/Sockets/Server/Main.hh"
+#include "uLucidity/Application/Server/Main.hh"
 
 namespace uLucidity {
 namespace Application {
-namespace Base {
+namespace uDentity {
+namespace UI {
+namespace Cocoa {
+namespace Network {
+namespace Sockets {
+namespace Server {
 
 //////////////////////////////////////////////////////////////////////////
 /// class Maint
-template <class TExtends = uLucidity::Base, class TImplements = typename TExtends::Implements>
-class _EXPORT_CLASS Maint: virtual public TImplements, public TExtends {
+template 
+<class TEvents = uLucidity::Application::Network::Sockets::Base::Main::Events,
+ class TMain = uLucidity::Application::Network::Sockets::Server::Main, 
+ class TExtends = uLucidity::Application::Server::Main, 
+ class TImplements = typename TExtends::Implements>
+class exported Maint: virtual public TEvents, virtual public TImplements, public TExtends {
 public:
+    typedef TEvents Events;
+    typedef TMain Main;
     typedef TImplements Implements;
     typedef TExtends Extends;
     typedef Maint Derives;
 
-    typedef xos::base::string string;
-    typedef xos::base::string string_t;
-    typedef xos::base::string::char_t char_t;
+    typedef typename Extends::string string;
+    typedef typename Extends::string_t string_t;
+    typedef typename Extends::char_t char_t;
 
     //////////////////////////////////////////////////////////////////////////
     /// constructor / destructor
-    Maint()
-    : request_("request"), response_("response") {
+    Maint(): main_(*this) {
     }
     virtual ~Maint() {
     }
@@ -61,22 +62,31 @@ private:
     Maint(const Maint &copy): Extends(copy) {
     }
 public:
+    //////////////////////////////////////////////////////////////////////////
+    /// run
+    virtual int run() {
+        int err = 0;
+        bool AcceptOne = main_.AcceptOne();
+        main_.set_AcceptOne();
+        main_.all_Run(this->response(), this->request());
+        main_.set_AcceptOne(AcceptOne);
+        return err;
+    }
 
-    virtual string& request() const {
-        return (string&)request_;
-    }
-    virtual string& response() const {
-        return (string&)response_;
-    }
     //////////////////////////////////////////////////////////////////////////
 protected:
-    string request_, response_;
+    Main main_;
 }; /// class Maint
 typedef Maint<> Main;
 
-} /// namespace Base 
+} /// namespace Server 
+} /// namespace Sockets 
+} /// namespace Network 
+} /// namespace Cocoa 
+} /// namespace UI 
+} /// namespace uDentity 
 } /// namespace Application 
 } /// namespace uLucidity 
 
-#endif /// ndef ULUCIDITY_APPLICATION_BASE_MAIN_HH
+#endif /// ndef ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_NETWORK_SOCKETS_SERVER_MAIN_HH
 

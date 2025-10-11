@@ -13,37 +13,38 @@
 /// or otherwise) arising in any way out of the use of this software, 
 /// even if advised of the possibility of such damage.
 ///
-///   File: uDentityView.hh
+///   File: uDentityThread.hh
 ///
 /// Author: $author$
 ///   Date: 10/9/2025
 ///////////////////////////////////////////////////////////////////////
-#ifndef _ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_UDENTITYVIEW_HH
-#define _ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_UDENTITYVIEW_HH
+#ifndef _ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_UDENTITYTHREAD_HH
+#define _ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_UDENTITYTHREAD_HH
 
-#include "uLucidity/UI/Cocoa/View.hh"
+#include "uLucidity/UI/Cocoa/Cocoa.hh"
 
 ///////////////////////////////////////////////////////////////////////
-/// Interface: uDentityView
+/// Interface: uDentityThread
 ///
 ///    Author: $author$
 ///      Date: 10/9/2025
 ///////////////////////////////////////////////////////////////////////
-@interface uDentityView: View {
+@interface uDentityThread: NSObject {
     }
-    ///////////////////////////////////////////////////////////////////////
-    /// initWithRect
-    - (View*)initWithRect:(NSRect)rect
-             application:(NSApplication*)application images:(Images*)images;
+    @property (assign) NSObject* view;
+    @property (assign) NSObject* thread;
 
     ///////////////////////////////////////////////////////////////////////
-    /// onMaximizeClicked
-    - (void)onMaximizeClicked:(id)sender 
-            application:(NSApplication*)application window:(NSWindow*)window;
-
+    /// start
+    - (void)start:(NSObject*)view;
+  
     ///////////////////////////////////////////////////////////////////////
-    /// onThreadFnished
-    - (void)onThreadFnished:(NSObject*)thread;
+    /// run
+    - (void)run;
+  
+    ///////////////////////////////////////////////////////////////////////
+    /// onFnished
+    - (void)onFnished:(NSObject*)result;
 @end
-#endif // _ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_UDENTITYVIEW_HH 
+#endif // _ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_UDENTITYTHREAD_HH 
 

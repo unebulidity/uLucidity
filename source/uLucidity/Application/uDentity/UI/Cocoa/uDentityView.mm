@@ -19,6 +19,7 @@
 ///   Date: 10/9/2025
 ///////////////////////////////////////////////////////////////////////
 #include "uLucidity/Application/uDentity/UI/Cocoa/uDentityView.hh"
+#include "uLucidity/Application/uDentity/UI/Cocoa/uDentityThread.hh"
 
 ///////////////////////////////////////////////////////////////////////
 /// Implentation: uDentityView
@@ -32,15 +33,45 @@
     - (View*)initWithRect:(NSRect)rect
              application:(NSApplication*)application images:(Images*)images {
         View* view = nil;
-        view = [super initWithRect:rect application:application images:images];
+
+        LOG_DEBUG("((view = [super initWithRect:rect application:application images:images]))...");
+        if ((view = [super initWithRect:rect application:application images:images])) {
+            uDentityThread* thread = nil;
+
+            LOG_DEBUG("...((view = " << String(view) << " = [super initWithRect:rect application:application images:images]))");
+            LOG_DEBUG("((thread = [[uDentityThread alloc] init]))...");
+            if ((thread = [[uDentityThread alloc] init])) {
+
+                LOG_DEBUG("...((thread = " << String(thread) << " = [[uDentityThread alloc] init]))");
+                LOG_DEBUG("[thread start:view]...");
+                [thread start:view];
+            } else {
+                LOG_DEBUG("...failed on ((" << String(thread) << " = [[uDentityThread alloc] init]))");
+            }
+        } else {
+            LOG_DEBUG("...failed on ((view = " << String(view) << " = [super initWithRect:rect application:application images:images]))");
+        }
         return view;
     }
+
     ///////////////////////////////////////////////////////////////////////
     /// onMaximizeClicked
     - (void)onMaximizeClicked:(id)sender 
-        application:(NSApplication*)application window:(NSWindow*)window {
+            application:(NSApplication*)application window:(NSWindow*)window {
+
         LOG_DEBUG("[application stop:self]...");
         [application stop:self];
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    /// onThreadFnished
+    - (void)onThreadFnished:(NSObject*)thread {
+        LOG_DEBUG("((thread = " << String(thread) << "))...");
+        if ((thread)) {
+            LOG_DEBUG("...((thread = " << String(thread) << "))");
+        } else {
+            LOG_DEBUG("failed on ((thread = " << String(thread) << "))");
+        }
     }
 @end
 

@@ -36,14 +36,16 @@ namespace Server {
 /// class Maint
 template 
 <class TJsonNodeEvents = xos::io::format::json::node_events,
- class TEvents = uLucidity::Application::Network::Sockets::Base::Main::Events,
+ class TSocketsMainEvents = uLucidity::Application::Network::Sockets::Base::Main::Events,
+ class TSocketsMain  = uLucidity::Application::Network::Sockets::Server::Main,
  class TExtends = uLucidity::Application::Console::Network::Sockets::Server::MainOpt, 
  class TImplements = typename TExtends::Implements>
 class exported Maint
-: virtual public TJsonNodeEvents, virtual public TEvents, virtual public TImplements, public TExtends {
+: virtual public TJsonNodeEvents, virtual public TImplements, public TExtends {
 public:
     typedef TJsonNodeEvents JsonNodeEvents;
-    typedef TEvents Events;
+    typedef TSocketsMainEvents SocketsMainEvents;
+    typedef TSocketsMain SocketsMain;
     typedef TImplements Implements;
     typedef TExtends Extends;
     typedef Maint Derives;
@@ -58,7 +60,7 @@ public:
 
     //////////////////////////////////////////////////////////////////////////
     /// constructor / destructor
-    Maint(): json_node_events_(*this), main_(*this) {
+    Maint(): json_node_events_(*this), main_(main_events_) {
     }
     virtual ~Maint() {
     }
@@ -70,7 +72,7 @@ protected:
 
     //////////////////////////////////////////////////////////////////////////
     /// ...named...
-    virtual xos::io::format::json::node_events& on_begin_named_node(const xos::io::format::json::node& node) {
+    virtual JsonNodeEvents& on_begin_named_node(const xos::io::format::json::node& node) {
         int err = 0;
         int unequal = 0;
         const xos::io::format::json::node::string_t node_string = node.get_string();
@@ -115,7 +117,7 @@ protected:
         }
         return json_node_events_this();
     }
-    virtual xos::io::format::json::node_events& on_end_named_node(const xos::io::format::json::node& node) {
+    virtual JsonNodeEvents& on_end_named_node(const xos::io::format::json::node& node) {
         int err = 0;
         LOGGER_IS_LOGGED_INFO("!(err = unset_on_string_node(node))...");
         if (!(err = unset_on_string_node(node))) {
@@ -128,8 +130,8 @@ protected:
     //////////////////////////////////////////////////////////////////////////
     /// ...on...string...    
     int (Derives::*on_string_node_)(const xos::io::format::json::node& node);
-    virtual xos::io::format::json::node_events& on_string_node(const xos::io::format::json::node& node) {
-        xos::io::format::json::node_events* forwarded_to = 0;
+    virtual JsonNodeEvents& on_string_node(const xos::io::format::json::node& node) {
+        JsonNodeEvents* forwarded_to = 0;
         LOGGER_IS_LOGGED_INFO("in...");
         if ((forwarded_to = json_node_events_forwarded_to())) {
             LOGGER_IS_LOGGED_INFO("forwarded_to->on_string_node(node)...");
@@ -234,7 +236,7 @@ protected:
     /// ...prepare_response_to_json_node_request
     virtual int prepare_response_to_json_node_request(string_t& response, const string_t& request, const json_node_t& json_node) {
         int err = 0;
-        xos::io::format::json::node_events& json_node_events = this_json_node_events();
+        JsonNodeEvents& json_node_events = this_json_node_events();
 
         LOGGER_IS_LOGGED_INFO("json_node.to(json_node_events)...");
         json_node.to(json_node_events);
@@ -324,15 +326,15 @@ protected:
     }
     //////////////////////////////////////////////////////////////////////////
     /// ...json_node_events
-    virtual xos::io::format::json::node_events* json_node_events_forwarded_to() {
-        return (xos::io::format::json::node_events*)(this->forwarded_to(this));
+    virtual JsonNodeEvents* json_node_events_forwarded_to() {
+        return (JsonNodeEvents*)(this->forwarded_to(this));
     }
-    virtual xos::io::format::json::node_events& json_node_events_this() const {
-        return (xos::io::format::json::node_events&)(*this);
+    virtual JsonNodeEvents& json_node_events_this() const {
+        return (JsonNodeEvents&)(*this);
     }
     /// ...json_node_events
-    virtual xos::io::format::json::node_events& this_json_node_events() const {
-        return (xos::io::format::json::node_events&)json_node_events_;
+    virtual JsonNodeEvents& this_json_node_events() const {
+        return (JsonNodeEvents&)json_node_events_;
     }
     //////////////////////////////////////////////////////////////////////////
 
@@ -433,8 +435,9 @@ protected:
 
     //////////////////////////////////////////////////////////////////////////
 protected:
-    xos::io::format::json::node_events& json_node_events_;
-    uLucidity::Application::Network::Sockets::Server::Main main_;
+    JsonNodeEvents& json_node_events_;
+    SocketsMainEvents main_events_;
+    SocketsMain main_;
 }; /// class Maint
 typedef Maint<> Main;
 

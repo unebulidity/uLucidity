@@ -13,25 +13,38 @@
 /// or otherwise) arising in any way out of the use of this software, 
 /// even if advised of the possibility of such damage.
 ///
-///   File: Base.hh
+///   File: Main.mm
 ///
 /// Author: $author$
-///   Date: 10/5/2025
+///   Date: 10/10/2025
 //////////////////////////////////////////////////////////////////////////
-#ifndef ULUCIDITY_BASE_HH
-#define ULUCIDITY_BASE_HH
+#include "uLucidity/Application/uDentity/UI/Cocoa/Network/Sockets/Server/Main.hh"
 
-#include "uLucidity/Platform/Platform.h"
-#include "uLucidity/Base/Base.hpp"
-#include "xos/base/base.hpp"
-
-#if !defined(XOS_BASE_2STRING)
-#define XOS_BASE_2STRINGX(value) "" #value ""
-#define XOS_BASE_2STRING(value) XOS_BASE_2STRINGX(value)
-#endif /// !defined(XOS_BASE_2STRING)
+#ifndef ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_NETWORK_SOCKETS_SERVER_MAIN_INSTANCE
+/// #define ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_NETWORK_SOCKETS_SERVER_MAIN_INSTANCE 
+#else /// ndef ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_NETWORK_SOCKETS_SERVER_MAIN_INSTANCE 
+#endif /// ndef ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_NETWORK_SOCKETS_SERVER_MAIN_INSTANCE 
 
 namespace uLucidity {
+namespace Application {
+namespace uDentity {
+namespace UI {
+namespace Cocoa {
+namespace Network {
+namespace Sockets {
+namespace Server {
 
+/// class Maint
+#ifdef ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_NETWORK_SOCKETS_SERVER_MAIN_INSTANCE
+static Main the_Main;
+#endif /// def ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_NETWORK_SOCKETS_SERVER_MAIN_INSTANCE 
+
+} /// namespace Server 
+} /// namespace Sockets 
+} /// namespace Network 
+} /// namespace Cocoa 
+} /// namespace UI 
+} /// namespace uDentity 
+} /// namespace Application 
 } /// namespace uLucidity 
 
-#endif /// ndef ULUCIDITY_BASE_HH

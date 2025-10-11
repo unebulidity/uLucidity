@@ -132,10 +132,14 @@ typedef int BOOL;
 #if defined(MACOSX)
 typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;
-typedef void* void_pointer_t;
-typedef const void* const_void_pointer_t;
-#define pointer_t void_pointer_t
-#define const_pointer_t const_void_pointer_t
+
+#if !defined(pointer_t)
+#define pointer_t platform_pointer_t
+#endif /*/ !defined(defined_pointer_t) /*/
+
+#if !defined(const_pointer_t)
+#define const_pointer_t platform_const_pointer_t
+#endif /*/ !defined(platform_const_pointer_t) /*/
 #else // defined(MACOSX) */
 #endif // defined(MACOSX) */
 
@@ -187,7 +191,10 @@ typedef PVOID HANDLE;
 typedef INT INVALID_HANDLE_T;
 typedef INT NULL_HANDLE_T;
 
+#if !defined(OBJC_ATOM_DEFINED)
+#define OBJC_ATOM_DEFINED
 typedef PVOID ATOM;
+#endif /*/ !defined(OBJC_ATOM_DEFINED) /*/
 typedef INT INVALID_ATOM_T;
 typedef INT NULL_ATOM_T;
 
