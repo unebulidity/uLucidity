@@ -9,6 +9,7 @@
 #ifndef ULUCIDITY_UI_COCOA_MAIN_HH
 #define ULUCIDITY_UI_COCOA_MAIN_HH
 
+#include "uLucidity/UI/Cocoa/ApplicationDelegate.hh"
 #include "uLucidity/UI/Cocoa/Window.hh"
 #include "uLucidity/UI/Cocoa/View.hh"
 #include "uLucidity/UI/PluginLibrary.hpp"

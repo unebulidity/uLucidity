@@ -19,7 +19,7 @@
 ///   Date: 10/9/2025
 ///////////////////////////////////////////////////////////////////////
 #include "uLucidity/Application/uDentity/UI/Cocoa/uDentityView.hh"
-#include "uLucidity/Application/uDentity/UI/Cocoa/uDentityThread.hh"
+//#include "uLucidity/Application/uDentity/UI/Cocoa/uDentityThread.hh"
 
 ///////////////////////////////////////////////////////////////////////
 /// Implentation: uDentityView
@@ -33,7 +33,7 @@
     - (View*)initWithRect:(NSRect)rect
              application:(NSApplication*)application images:(Images*)images {
         View* view = nil;
-
+        
         LOG_DEBUG("((view = [super initWithRect:rect application:application images:images]))...");
         if ((view = [super initWithRect:rect application:application images:images])) {
             uDentityThread* thread = nil;
@@ -65,12 +65,22 @@
 
     ///////////////////////////////////////////////////////////////////////
     /// onThreadFnished
-    - (void)onThreadFnished:(NSObject*)thread {
+    - (void)onThreadFnished:(uDentityThread*)thread {
+        NSApplication* application = nil;
+
         LOG_DEBUG("((thread = " << String(thread) << "))...");
         if ((thread)) {
             LOG_DEBUG("...((thread = " << String(thread) << "))");
         } else {
             LOG_DEBUG("failed on ((thread = " << String(thread) << "))");
+        }
+        LOG_DEBUG("((application = [self application]))...");
+        if ((application = [self application])) {
+
+            LOG_DEBUG("[application terminate:self]...");
+            [application terminate:self];
+        } else {
+            LOG_DEBUG("failed on ((" << String(application) << " = [self application]))");
         }
     }
 @end

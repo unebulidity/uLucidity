@@ -13,38 +13,24 @@
 /// or otherwise) arising in any way out of the use of this software, 
 /// even if advised of the possibility of such damage.
 ///
-///   File: uDentityThread.hh
+///   File: ApplicationDelegate.hh
 ///
 /// Author: $author$
-///   Date: 10/9/2025
+///   Date: 10/12/2025
 ///////////////////////////////////////////////////////////////////////
-#ifndef _ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_UDENTITYTHREAD_HH
-#define _ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_UDENTITYTHREAD_HH
+#ifndef _ULUCIDITY_UI_COCOA_APPLICATIONDELEGATE_HH
+#define _ULUCIDITY_UI_COCOA_APPLICATIONDELEGATE_HH
 
 #include "uLucidity/UI/Cocoa/Cocoa.hh"
 
 ///////////////////////////////////////////////////////////////////////
-/// Interface: uDentityThread
+/// Interface: ApplicationDelegate
 ///
 ///    Author: $author$
-///      Date: 10/9/2025
+///      Date: 10/12/2025
 ///////////////////////////////////////////////////////////////////////
-@interface uDentityThread: NSObject {
+@interface ApplicationDelegate: NSObject <NSApplicationDelegate> {
     }
-    @property (assign) NSObject* view;
-    @property (assign) NSObject* thread;
-
-    ///////////////////////////////////////////////////////////////////////
-    /// start
-    - (void)start:(NSObject*)view;
-  
-    ///////////////////////////////////////////////////////////////////////
-    /// run
-    - (void)run;
-  
-    ///////////////////////////////////////////////////////////////////////
-    /// onFnished
-    - (void)onFnished:(NSObject*)thread;
 @end
-#endif // _ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_UDENTITYTHREAD_HH 
+#endif // _ULUCIDITY_UI_COCOA_APPLICATIONDELEGATE_HH 
 

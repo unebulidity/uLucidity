@@ -39,6 +39,7 @@ int main(int argc, char **argv, char **env) {
     int err = 1;
     NSAutoreleasePool *autoreleasePool = nil;
     NSApplication* sharedApplication = nil;
+    ApplicationDelegate* applicationDelegate = nil;
     id<Main> main = nil;
 
     LOG_DEBUG("[[AutoreleasePool alloc] init]...");
@@ -49,6 +50,13 @@ int main(int argc, char **argv, char **env) {
         if ((sharedApplication = [NSApplication sharedApplication])) {
             LOG_DEBUG("..." << string(sharedApplication) << " = [NSApplication sharedApplication]");
 
+            LOG_DEBUG("((applicationDelegate = [[ApplicationDelegate alloc] init]))...");
+            if ((applicationDelegate = [[ApplicationDelegate alloc] init])) {
+                LOG_DEBUG("[sharedApplication setDelegate:applicationDelegate]...");
+                [sharedApplication setDelegate:applicationDelegate];
+            } else {
+                LOG_DEBUG("...failed on ((applicationDelegate = [[ApplicationDelegate alloc] init]))");
+            }
             LOG_DEBUG("[uDentityMainCreator create:sharedApplication]...");
             if ((main = [uDentityMainCreator create:sharedApplication])) {
                 LOG_DEBUG("..." << string(main) << " = [uDentityMainCreator create:sharedApplication]");

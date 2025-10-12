@@ -22,6 +22,7 @@
 #define _ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_UDENTITYVIEW_HH
 
 #include "uLucidity/UI/Cocoa/View.hh"
+#include "uLucidity/Application/uDentity/UI/Cocoa/uDentityThread.hh"
 
 ///////////////////////////////////////////////////////////////////////
 /// Interface: uDentityView
@@ -43,7 +44,7 @@
 
     ///////////////////////////////////////////////////////////////////////
     /// onThreadFnished
-    - (void)onThreadFnished:(NSObject*)thread;
+    - (void)onThreadFnished:(uDentityThread*)thread;
 @end
 #endif // _ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_UDENTITYVIEW_HH 
 
