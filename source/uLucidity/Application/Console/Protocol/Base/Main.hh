@@ -70,7 +70,19 @@ public:
       endof_udentify_message_("\"}}"),
 
       begin_udentify_response_message_("{\"password\":\""), 
-      endof_udentify_response_message_("\"}") {
+      endof_udentify_response_message_("\"}"), 
+      
+      hello_request_("{\"system\":{\"action\":\"hello\"}}"),
+      hello_response_(hello_request_),
+    
+      restart_request_("{\"system\":{\"action\":\"restart\"}}"),
+      restart_response_(restart_request_),
+    
+      stop_request_("{\"system\":{\"action\":\"stop\"}}"),
+      stop_response_(stop_request_),
+    
+      unknown_request_("{\"system\":{\"request\":\"unknown\"}}"),
+      unknown_response_("{\"system\":{\"response\":\"unknown\"}}") {
         set_default_udentify_request_message();
         set_default_udentify_response_message();
     }
@@ -81,6 +93,23 @@ private:
     }
 public:
 protected:
+
+    //////////////////////////////////////////////////////////////////////////
+    /// ...udentity_path
+    virtual string_t& set_udentity_path(const string_t& to) {
+        string_t& udentity_path = this->udentity_path();
+        udentity_path.assign(to);
+        return udentity_path;
+    }
+    virtual string_t& set_udentity_path(const char_t* to) {
+        string_t& udentity_path = this->udentity_path();
+        udentity_path.assign(to);
+        return udentity_path;
+    }
+    virtual string_t& udentity_path() const {
+        return (string_t&)udentity_path_;
+    }
+    //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
     /// ...valueof_unknown_udentify_user
@@ -455,23 +484,6 @@ protected:
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
-    /// ...udentity_path
-    virtual string_t& set_udentity_path(const string_t& to) {
-        string_t& udentity_path = this->udentity_path();
-        udentity_path.assign(to);
-        return udentity_path;
-    }
-    virtual string_t& set_udentity_path(const char_t* to) {
-        string_t& udentity_path = this->udentity_path();
-        udentity_path.assign(to);
-        return udentity_path;
-    }
-    virtual string_t& udentity_path() const {
-        return (string_t&)udentity_path_;
-    }
-    //////////////////////////////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////////////////////////////
     /// ...request...
     virtual string_t& request_message() const {
         return udentify_request_message();
@@ -479,6 +491,120 @@ protected:
     /// ...response...
     virtual string_t& response_message() const {
         return udentify_response_message();
+    }
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    /// ...hello_request
+    virtual string_t& set_system_hello_request() {
+        return set_to_hello_request();
+    }
+    virtual string_t& set_to_hello_request() {
+        const string_t &hello_request = this->hello_request();
+        string_t &request = this->request_message();
+        request.assign(hello_request);
+        return request;
+    }
+    virtual string_t& hello_request() const {
+        return (string_t&)hello_request_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    /// ...hello_response
+    virtual string_t& hello_response() const {
+        return (string_t&)hello_response_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    /// ...restart_request
+    virtual string_t& set_system_restart_request() {
+        return set_to_restart_request();
+    }
+    virtual string_t& set_to_restart_request() {
+        const string_t &restart_request = this->restart_request();
+        string_t &request = this->request_message();
+        request.assign(restart_request);
+        return request;
+    }
+    virtual string_t& restart_request() const {
+        return (string_t&)restart_request_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    /// ...restart_response
+    virtual string_t& restart_response() const {
+        return (string_t&)restart_response_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    /// ...start_request
+    virtual string_t& set_system_start_request() {
+        return set_to_start_request();
+    }
+    virtual string_t& set_to_start_request() {
+        const string_t &start_request = this->start_request();
+        string_t &request = this->request_message();
+        request.assign(start_request);
+        return request;
+    }
+    virtual string_t& start_request() const {
+        return (string_t&)restart_request_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    /// ...start_response
+    virtual string_t& start_response() const {
+        return (string_t&)restart_response_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    /// ...stop_request
+    virtual string_t& set_system_stop_request() {
+        return set_to_stop_request();
+    }
+    virtual string_t& set_to_stop_request() {
+        const string_t &stop_request = this->stop_request();
+        string_t &request = this->request_message();
+        request.assign(stop_request);
+        return request;
+    }
+    virtual string_t& stop_request() const {
+        return (string_t&)stop_request_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    /// ...stop_response
+    virtual string_t& stop_response() const {
+        return (string_t&)stop_response_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    /// ...unknown_request
+    virtual string_t& set_system_unknown_request() {
+        return set_to_unknown_request();
+    }
+    virtual string_t& set_to_unknown_request() {
+        const string_t &unknown_request = this->unknown_request();
+        string_t &request = this->request_message();
+        request.assign(unknown_request);
+        return request;
+    }
+    virtual string_t& unknown_request() const {
+        return (string_t&)unknown_request_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    /// ...unknown_response
+    virtual string_t& set_system_unknown_response() {
+        return set_to_unknown_response();
+    }
+    virtual string_t& set_to_unknown_response() {
+        const string_t &unknown_response = this->unknown_response();
+        string_t &response = this->response_message();
+        response.assign(unknown_response);
+        return response;
+    }
+    virtual string_t& unknown_response() const {
+        return (string_t&)unknown_response_;
     }
     //////////////////////////////////////////////////////////////////////////
 
@@ -492,7 +618,12 @@ protected:
              begin_udentify_resource_, begin_udentify_password_,
              begin_udentify_message_, endof_udentify_message_, 
              udentify_request_message_, udentify_response_message_, 
-             begin_udentify_response_message_, endof_udentify_response_message_; 
+             begin_udentify_response_message_, endof_udentify_response_message_,
+
+             hello_request_, hello_response_,
+             restart_request_, restart_response_,
+             stop_request_, stop_response_,
+             unknown_request_, unknown_response_; 
 }; /// class Maint
 typedef Maint<> Main;
 

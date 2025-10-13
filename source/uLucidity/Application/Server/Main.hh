@@ -50,6 +50,7 @@ private:
     Maint(const Maint &copy): Extends(copy) {
     }
 public:
+protected:
 
     //////////////////////////////////////////////////////////////////////////
 protected:

@@ -133,6 +133,7 @@ public:
             int err = 0;
             return err;
         }
+    protected:
     }; /// class Events
 
 protected:

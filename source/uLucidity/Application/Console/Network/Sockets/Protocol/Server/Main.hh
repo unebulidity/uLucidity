@@ -18,8 +18,8 @@
 /// Author: $author$
 ///   Date: 10/7/2025
 //////////////////////////////////////////////////////////////////////////
-#ifndef ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_SERVER_MAIN_HH
-#define ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_SERVER_MAIN_HH
+#ifndef ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_PROTOCOL_SERVER_MAIN_HH
+#define ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_PROTOCOL_SERVER_MAIN_HH
 
 #include "uLucidity/Application/Console/Network/Sockets/Server/MainOpt.hh"
 #include "xos/udentify/server/interface.hpp"
@@ -30,6 +30,7 @@ namespace Application {
 namespace Console {
 namespace Network {
 namespace Sockets {
+namespace Protocol {
 namespace Server {
 
 //////////////////////////////////////////////////////////////////////////
@@ -60,7 +61,8 @@ public:
 
     //////////////////////////////////////////////////////////////////////////
     /// constructor / destructor
-    Maint(): json_node_events_(*this), main_events_(*this), main_(main_events_) {
+    Maint()
+    : json_node_events_(*this) {
     }
     virtual ~Maint() {
     }
@@ -69,44 +71,6 @@ private:
     }
 public:
 protected:
-    //////////////////////////////////////////////////////////////////////////
-    /// class MainEvents
-    class _EXPORT_CLASS MainEvents: virtual public SocketsMainEvents {
-    public:
-        typedef SocketsMainEvents Implements;
-        typedef typename Derives::string string;
-        typedef typename Derives::char_t char_t;
-    
-        //////////////////////////////////////////////////////////////////////////
-        /// constructor / destructor
-        MainEvents(Derives &main): main_(main) {
-        }
-        virtual ~MainEvents() {
-        }
-        //////////////////////////////////////////////////////////////////////////
-        virtual int on_receive(char_t* chars, size_t length) { 
-            int err = 0;
-            err = main_.on_receive(chars, length);
-            return err;
-        }
-        virtual int on_begin_receive(char_t* chars, size_t length) { 
-            int err = 0;
-            err = main_.on_begin_receive(chars, length);
-            return err;
-        }
-        virtual int on_end_receive(char_t* chars, size_t length) { 
-            int err = 0;
-            err = main_.on_end_receive(chars, length);
-            return err;
-        }
-        virtual int on_after_receive(string &target, const string &source) {
-            int err = 0;
-            err = main_.on_after_receive(target, source);
-            return err;
-        }
-    protected:
-        Derives& main_;
-    }; /// class Events
 
     //////////////////////////////////////////////////////////////////////////
     /// ...named...
@@ -514,6 +478,7 @@ protected:
         int err = 0;
         return err;
     }
+public:
     virtual int all_prepare_response_to_request(string_t& response, const string_t& request) {
         int err = 0;
         if (!(err = before_prepare_response_to_request(response, request))) {
@@ -526,76 +491,20 @@ protected:
         return err;
     }
     //////////////////////////////////////////////////////////////////////////
-    /// on...receive
-    virtual int on_receive(char_t* chars, size_t length) { 
-        int err = 0;
-        return err;
-    }
-    virtual int on_begin_receive(char_t* chars, size_t length) { 
-        int err = 0;
-        return err;
-    }
-    virtual int on_end_receive(char_t* chars, size_t length) { 
-        int err = 0;
-        return err;
-    }
-    virtual int on_after_receive(string &target, const string &source) {
-        int err = 0;
-        LOGGER_IS_LOGGED_INFO("(!(err = all_prepare_response_to_request(\"" << target << "\", \"" << source << "\")))...");
-        if (!(err = all_prepare_response_to_request(target, source))) {
-            LOGGER_IS_LOGGED_INFO("...(!(" << err << " = all_prepare_response_to_request(\"" << target << "\", \"" << source << "\")))");
-        } else {
-            LOGGER_IS_LOGGED_INFO("...failed on (!(" << err << " = all_prepare_response_to_request(\"" << target << "\", \"" << source << "\")))");
-        }
-        return err;
-    }
-    //////////////////////////////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////////////////////////////
-    /// on...accept_one_option...
-    virtual int on_accept_one_option_get
-    (const char_t* optarg, int optind, int argc, char_t**argv, char_t**env) {
-        int err = 0;
-        if (!(err = this->set_main_run(argc, argv, env))) {
-            if (!(err = this->main_run_set(argc, argv, env))) {
-                main_.set_AcceptOne();
-            } else {}
-        } else {}
-        return err;
-    }
-    //////////////////////////////////////////////////////////////////////////
-    /// on...accept_option...
-    virtual int on_accept_option_get
-    (const char_t* optarg, int optind, int argc, char_t**argv, char_t**env) {
-        int err = 0;
-        if (!(err = this->set_main_run(argc, argv, env))) {
-            if (!(err = this->main_run_set(argc, argv, env))) {
-                main_.set_Accept();
-            } else {}
-        } else {}
-        return err;
-    }
-    //////////////////////////////////////////////////////////////////////////
-
-    //////////////////////////////////////////////////////////////////////////
-    virtual uLucidity::Application::Network::Sockets::Base::Main& main() const {
-        return (uLucidity::Application::Network::Sockets::Base::Main&)main_;
-    }
-    //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
 protected:
     JsonNodeEvents& json_node_events_;
-    MainEvents main_events_;
-    SocketsMain main_;
 }; /// class Maint
 typedef Maint<> Main;
 
 } /// namespace Server 
+} /// namespace Protocol 
 } /// namespace Sockets 
 } /// namespace Network 
 } /// namespace Console 
 } /// namespace Application 
 } /// namespace uLucidity 
 
-#endif /// ndef ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_SERVER_MAIN_HH
+#endif /// ndef ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_PROTOCOL_SERVER_MAIN_HH
+

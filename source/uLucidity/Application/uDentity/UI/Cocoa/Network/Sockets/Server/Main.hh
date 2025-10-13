@@ -22,6 +22,7 @@
 #define ULUCIDITY_APPLICATION_UDENTITY_UI_COCOA_NETWORK_SOCKETS_SERVER_MAIN_HH
 
 #include "uLucidity/Application/Network/Sockets/Server/Main.hh"
+#include "uLucidity/Application/Console/Network/Sockets/Protocol/Server/Main.hh"
 #include "uLucidity/Application/Server/Main.hh"
 
 namespace uLucidity {
@@ -38,12 +39,14 @@ namespace Server {
 template 
 <class TEvents = uLucidity::Application::Network::Sockets::Base::Main::Events,
  class TMain = uLucidity::Application::Network::Sockets::Server::Main, 
+ class TProtocolMain = uLucidity::Application::Console::Network::Sockets::Protocol::Server::Main, 
  class TExtends = uLucidity::Application::Server::Main, 
  class TImplements = typename TExtends::Implements>
 class exported Maint: virtual public TEvents, virtual public TImplements, public TExtends {
 public:
     typedef TEvents Events;
     typedef TMain Main;
+    typedef TProtocolMain ProtocolMain;
     typedef TImplements Implements;
     typedef TExtends Extends;
     typedef Maint Derives;
@@ -72,10 +75,175 @@ public:
         main_.set_AcceptOne(AcceptOne);
         return err;
     }
+protected:
+    //////////////////////////////////////////////////////////////////////////
+    /// ...prepare_response_to_unknown_request
+    virtual int prepare_response_to_unknown_request(string_t& response, const string_t& request) {
+        int err = 0;
+        LOGGER_IS_LOGGED_INFO("response.assign(\"" << this->unknown_request() << "\")...");
+        response.assign(this->unknown_request());
+        return err;
+    }
+    virtual int before_prepare_response_to_unknown_request(string_t& response, const string_t& request) {
+        int err = 0;
+        return err;
+    }
+    virtual int after_prepare_response_to_unknown_request(string_t& response, const string_t& request) {
+        int err = 0;
+        return err;
+    }
+    virtual int all_prepare_response_to_unknown_request(string_t& response, const string_t& request) {
+        int err = 0;
+        if (!(err = before_prepare_response_to_unknown_request(response, request))) {
+            int err2 = 0;
+            err = prepare_response_to_unknown_request(response, request);
+            if ((err2 = after_prepare_response_to_unknown_request(response, request))) {
+                if (!(err)) err = err2;
+            }
+        }
+        return err;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    /// ...prepare_response_to_hello_request
+    virtual int prepare_response_to_hello_request(string_t& response, const string_t& request) {
+        int err = 0;
+        LOGGER_IS_LOGGED_INFO("response.assign(\"" << this->hello_response() << "\")...");
+        response.assign(this->hello_response());
+        return err;
+    }
+    virtual int before_prepare_response_to_hello_request(string_t& response, const string_t& request) {
+        int err = 0;
+        return err;
+    }
+    virtual int after_prepare_response_to_hello_request(string_t& response, const string_t& request) {
+        int err = 0;
+        return err;
+    }
+    virtual int all_prepare_response_to_hello_request(string_t& response, const string_t& request) {
+        int err = 0;
+        if (!(err = before_prepare_response_to_hello_request(response, request))) {
+            int err2 = 0;
+            err = prepare_response_to_hello_request(response, request);
+            if ((err2 = after_prepare_response_to_hello_request(response, request))) {
+                if (!(err)) err = err2;
+            }
+        }
+        return err;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    /// ...prepare_response_to_restart_request
+    virtual int prepare_response_to_restart_request(string_t& response, const string_t& request) {
+        int err = 0;
+        LOGGER_IS_LOGGED_INFO("response.assign(\"" << this->restart_response() << "\")...");
+        response.assign(this->restart_response());
+        return err;
+    }
+    virtual int before_prepare_response_to_restart_request(string_t& response, const string_t& request) {
+        int err = 0;
+        return err;
+    }
+    virtual int after_prepare_response_to_restart_request(string_t& response, const string_t& request) {
+        int err = 0;
+        return err;
+    }
+    virtual int all_prepare_response_to_restart_request(string_t& response, const string_t& request) {
+        int err = 0;
+        if (!(err = before_prepare_response_to_restart_request(response, request))) {
+            int err2 = 0;
+            err = prepare_response_to_restart_request(response, request);
+            if ((err2 = after_prepare_response_to_restart_request(response, request))) {
+                if (!(err)) err = err2;
+            }
+        }
+        return err;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    /// ...prepare_response_to_stop_request
+    virtual int prepare_response_to_stop_request(string_t& response, const string_t& request) {
+        int err = 0;
+        LOGGER_IS_LOGGED_INFO("response.assign(\"" << this->stop_response() << "\")...");
+        response.assign(this->stop_response());
+        return err;
+    }
+    virtual int before_prepare_response_to_stop_request(string_t& response, const string_t& request) {
+        int err = 0;
+        return err;
+    }
+    virtual int after_prepare_response_to_stop_request(string_t& response, const string_t& request) {
+        int err = 0;
+        return err;
+    }
+    virtual int all_prepare_response_to_stop_request(string_t& response, const string_t& request) {
+        int err = 0;
+        if (!(err = before_prepare_response_to_stop_request(response, request))) {
+            int err2 = 0;
+            err = prepare_response_to_stop_request(response, request);
+            if ((err2 = after_prepare_response_to_stop_request(response, request))) {
+                if (!(err)) err = err2;
+            }
+        }
+        return err;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    /// ...prepare_response_to_request
+    virtual int prepare_response_to_request(string_t& response, const string_t& request) {
+        int err = 0;
+        LOGGER_IS_LOGGED_INFO("(!(err = all_prepare_response_to_unknown_request(\"" << response << "\", \"" << request << "\")))...");
+        if (!(err = all_prepare_response_to_unknown_request(response, request))) {
+            LOGGER_IS_LOGGED_INFO("...(!(" << err << " = all_prepare_response_to_unknown_request(\"" << response << "\", \"" << request << "\")))");
+        } else {
+            LOGGER_IS_LOGGED_INFO("...failed on (!(" << err << " = all_prepare_response_to_unknown_request(\"" << response << "\", \"" << request << "\")))");
+        }
+        return err;
+    }
+    virtual int before_prepare_response_to_request(string_t& response, const string_t& request) {
+        int err = 0;
+        return err;
+    }
+    virtual int after_prepare_response_to_request(string_t& response, const string_t& request) {
+        int err = 0;
+        return err;
+    }
+    virtual int all_prepare_response_to_request(string_t& response, const string_t& request) {
+        int err = 0;
+        if (!(err = before_prepare_response_to_request(response, request))) {
+            int err2 = 0;
+            err = prepare_response_to_request(response, request);
+            if ((err2 = after_prepare_response_to_request(response, request))) {
+                if (!(err)) err = err2;
+            }
+        }
+        return err;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    virtual int on_receive(char_t* chars, size_t length) { 
+        int err = 0;
+        return err;
+    }
+    virtual int on_begin_receive(char_t* chars, size_t length) { 
+        int err = 0;
+        return err;
+    }
+    virtual int on_end_receive(char_t* chars, size_t length) { 
+        int err = 0;
+        return err;
+    }
+    virtual int on_after_receive(string &target, const string &source) {
+        int err = 0;
+        LOGGER_IS_LOGGED_INFO("(!(err = all_prepare_response_to_request(\"" << target << "\", \"" << source << "\")))...");
+        if (!(err = protocol_main_.all_prepare_response_to_request(target, source))) {
+            LOGGER_IS_LOGGED_INFO("...(!(" << err << " = all_prepare_response_to_request(\"" << target << "\", \"" << source << "\")))");
+        } else {
+            LOGGER_IS_LOGGED_INFO("...failed on (!(" << err << " = all_prepare_response_to_request(\"" << target << "\", \"" << source << "\")))");
+        }
+        return err;
+    }
+    //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
 protected:
     Main main_;
+    ProtocolMain protocol_main_;
 }; /// class Maint
 typedef Maint<> Main;
 
