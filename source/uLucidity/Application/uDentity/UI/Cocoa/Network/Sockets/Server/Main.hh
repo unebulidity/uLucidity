@@ -69,10 +69,15 @@ public:
     /// run
     virtual int run() {
         int err = 0;
-        bool AcceptOne = main_.AcceptOne();
-        main_.set_AcceptOne();
-        main_.all_Run(this->response(), this->request());
-        main_.set_AcceptOne(AcceptOne);
+        const string_t& request = this->request();
+        string_t& response = this->response();
+
+        LOGGER_IS_LOGGED_INFO("(!(err = main_.all_Run(\"" << response << "\", \"" << request << "\")))...");
+        if (!(err = main_.all_Run(response, request))) {
+            LOGGER_IS_LOGGED_INFO("...(!(" << err << " = main_.all_Run(\"" << response << "\", \"" << request << "\")))");
+        } else {
+            LOGGER_IS_LOGGED_INFO("...failed on (!(" << err << " = main_.all_Run(\"" << response << "\", \"" << request << "\")))");
+        }
         return err;
     }
 protected:
@@ -82,6 +87,13 @@ protected:
         int err = 0;
         LOGGER_IS_LOGGED_INFO("response.assign(\"" << this->unknown_request() << "\")...");
         response.assign(this->unknown_request());
+
+        LOGGER_IS_LOGGED_INFO("(!(err = all_prepare_response_to_request(\"" << response << "\", \"" << request << "\")))...");
+        if (!(err = protocol_main_.all_prepare_response_to_request(response, request))) {
+            LOGGER_IS_LOGGED_INFO("...(!(" << err << " = all_prepare_response_to_request(\"" << response << "\", \"" << request << "\")))");
+        } else {
+            LOGGER_IS_LOGGED_INFO("...failed on (!(" << err << " = all_prepare_response_to_request(\"" << response << "\", \"" << request << "\")))");
+        }
         return err;
     }
     virtual int before_prepare_response_to_unknown_request(string_t& response, const string_t& request) {
@@ -136,6 +148,9 @@ protected:
         int err = 0;
         LOGGER_IS_LOGGED_INFO("response.assign(\"" << this->restart_response() << "\")...");
         response.assign(this->restart_response());
+        
+        LOGGER_IS_LOGGED_INFO("main_.set_accept_restart()...");
+        main_.set_accept_restart();
         return err;
     }
     virtual int before_prepare_response_to_restart_request(string_t& response, const string_t& request) {
@@ -163,6 +178,9 @@ protected:
         int err = 0;
         LOGGER_IS_LOGGED_INFO("response.assign(\"" << this->stop_response() << "\")...");
         response.assign(this->stop_response());
+
+        LOGGER_IS_LOGGED_INFO("main_.set_accept_done()...");
+        main_.set_accept_done();
         return err;
     }
     virtual int before_prepare_response_to_stop_request(string_t& response, const string_t& request) {
@@ -231,7 +249,7 @@ protected:
     virtual int on_after_receive(string &target, const string &source) {
         int err = 0;
         LOGGER_IS_LOGGED_INFO("(!(err = all_prepare_response_to_request(\"" << target << "\", \"" << source << "\")))...");
-        if (!(err = protocol_main_.all_prepare_response_to_request(target, source))) {
+        if (!(err = all_prepare_response_to_request(target, source))) {
             LOGGER_IS_LOGGED_INFO("...(!(" << err << " = all_prepare_response_to_request(\"" << target << "\", \"" << source << "\")))");
         } else {
             LOGGER_IS_LOGGED_INFO("...failed on (!(" << err << " = all_prepare_response_to_request(\"" << target << "\", \"" << source << "\")))");

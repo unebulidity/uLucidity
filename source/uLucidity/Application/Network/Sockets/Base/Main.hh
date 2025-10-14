@@ -230,7 +230,7 @@ protected:
                             xos::network::sockets::os::interface sk;
                             
                             LOG_DEBUG("for (bool done = false; !done; ) {...");
-                            for (bool done = false; !done; done = accept_one_) {
+                            for (bool done = false; !done; done = get_accept_done()) {
                                 
                                 LOG_DEBUG("(!(done = !(sk.closed())))...");
                                 if (!(done = !(sk.closed()))) {
@@ -379,27 +379,27 @@ protected:
     }
     virtual int all_Accept(string &target, const string &source) {
         int err = 0;
-        if (!(err = before_Accept(target, source))) {
-            int err2 = 0;
-            err = Accept(target, source);
-            if ((err2 = after_Accept(target, source))) {
-                if (!(err)) err = err2;
+        do {
+            set_accept_done(false);
+            set_accept_restart(false);
+            
+            if (!(err = before_Accept(target, source))) {
+                int err2 = 0;
+                err = Accept(target, source);
+                if ((err2 = after_Accept(target, source))) {
+                    if (!(err)) err = err2;
+                }
             }
-        }
+        } while (get_accept_restart());
         return err;
     }
     virtual int all_AcceptOne(string &target, const string &source) {
         int err = 0;
-        bool old_accept_one = accept_one_;
-        accept_one_ = true;
-        if (!(err = before_Accept(target, source))) {
-            int err2 = 0;
-            err = Accept(target, source);
-            if ((err2 = after_Accept(target, source))) {
-                if (!(err)) err = err2;
-            }
+        bool old_accept_one = get_accept_one();
+        set_accept_one(true);
+        if (!(err = all_Accept(target, source))) {
         }
-        accept_one_ = old_accept_one;
+        set_accept_one(old_accept_one);
         return err;
     }
     //////////////////////////////////////////////////////////////////////////
@@ -606,6 +606,7 @@ protected:
     }
     ///////////////////////////////////////////////////////////////////////
 
+public:
     //////////////////////////////////////////////////////////////////////////
     /// ..host / ..port
     /// ...
@@ -668,7 +669,7 @@ protected:
     }
     //////////////////////////////////////////////////////////////////////////
     /// ...accept_one / ...accept_done / ...accept_restart
-    virtual bool& set_accept_one(const bool& to) {
+    virtual bool& set_accept_one(const bool& to = true) {
         bool& accept_one = this->accept_one();
         accept_one = to;
         return accept_one;
@@ -680,13 +681,17 @@ protected:
         return (bool&)accept_one_;
     }
     /// ...accept_done
-    virtual bool& set_accept_done(const bool& to) {
+    virtual bool& set_accept_done(const bool& to = true) {
         bool& accept_done = this->accept_done();
         accept_done = to;
         return accept_done;
     }
-    virtual const bool& get_accept_done() const {
-        return this->accept_done();
+    virtual bool get_accept_done() const {
+        bool& accept_one = this->accept_one();
+        bool& accept_done = this->accept_done();
+        bool& accept_restart = this->accept_restart();
+        bool result = (accept_one || accept_done || accept_restart);
+        return result;
     }
     virtual bool& accept_done() const {
         return (bool&)accept_done_;
@@ -704,12 +709,12 @@ protected:
         return stop;
     }
     /// ...accept_restart
-    virtual bool& set_accept_restart(const bool& to) {
+    virtual bool& set_accept_restart(const bool& to = true) {
         bool& accept_restart = this->accept_restart();
         accept_restart = to;
         return accept_restart;
     }
-    virtual const bool& get_accept_restart() const {
+    virtual bool get_accept_restart() const {
         return this->accept_restart();
     }
     virtual bool& accept_restart() const {
@@ -789,6 +794,7 @@ protected:
     /// ..host / ..port
     //////////////////////////////////////////////////////////////////////////
 
+protected:
     //////////////////////////////////////////////////////////////////////////
     /// ...ep
     xos::network::sockets::endpoint& (derives::*accept_ep_)() const;
