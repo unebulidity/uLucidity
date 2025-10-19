@@ -4,7 +4,7 @@
 ///   File: View.mm
 ///
 /// Author: $author$
-///   Date: 11/1/2022, 10/9/2025
+///   Date: 11/1/2022, 10/18/2025
 ///////////////////////////////////////////////////////////////////////
 #include "uLucidity/UI/Cocoa/View.hh"
 #include "uLucidity/UI/Cocoa/Signals.hh"
@@ -16,7 +16,7 @@
 @implementation View
 
     - (View*)initWithRect:(NSRect)rect
-              application:(NSApplication*)application images:(Images*)images {
+             application:(NSApplication*)application images:(Images*)images {
         _application = application;
         _images = images;
         _selectedButton = nil;
@@ -46,10 +46,27 @@
         return nil;
     }
 
+    - (void) viewDidMoveToSuperview {
+        LOG_DEBUG("...{");
+        LOG_DEBUG("}...");
+    }
+    - (void) viewDidMoveToWindow {
+        LOG_DEBUG("...{");
+        LOG_DEBUG("}...");
+    }
+
     - (Image*)setContentImage {
-        if ((_contentImage)) {
-            LOG_DEBUG("[_content setImage:_contentImage]...");
-            [_content setImage:_contentImage];
+        LOG_DEBUG("((_content))...");
+        if ((_content)) {
+
+            LOG_DEBUG("((_contentImage))...");
+            if ((_contentImage)) {
+
+                LOG_DEBUG("[_content setImage:_contentImage]...");
+                [_content setImage:_contentImage];
+            } else {
+            }
+        } else {
         }
         return _contentImage;
     }

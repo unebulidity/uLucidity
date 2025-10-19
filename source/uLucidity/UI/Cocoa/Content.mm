@@ -4,7 +4,7 @@
 ///   File: Content.mm
 ///
 /// Author: $author$
-///   Date: 11/1/2022
+///   Date: 11/1/2022, 10/18/2025
 ///////////////////////////////////////////////////////////////////////
 #include "uLucidity/UI/Cocoa/Content.hh"
 
@@ -22,8 +22,10 @@
         _gc = nil;
         _image = nil;
 
+        LOG_DEBUG("(([super initWithFrame:rect]))...");
         if (([super initWithFrame:rect])) {
 
+            LOG_DEBUG("((_contextMenu = [[Menu alloc]...");
             if ((_contextMenu = [[Menu alloc]
                  initWithTitle:@ULUCIDITY_UI_COCOA_MENU_TITLE
                  application: application])) {

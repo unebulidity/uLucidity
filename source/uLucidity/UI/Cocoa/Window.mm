@@ -29,8 +29,9 @@
         LOG_DEBUG("[super initWithContentRect:rect styleMask:style backing:backing defer:defer]...");
         if ((superId = [super initWithContentRect:rect styleMask:style backing:backing defer:defer])) {
 
-            LOG_DEBUG("[[View alloc] initWithRect:viewRect application:application images:_images]...");
+            //LOG_DEBUG("[[View alloc] initWithRect:viewRect application:application images:_images]...");
             //if ((_view = [[View alloc] initWithRect:viewRect application:application images:_images])) {
+            LOG_DEBUG("((_view = [self allocView:viewRect]))...");
             if ((_view = [self allocView:viewRect])) {
 
                 LOG_DEBUG("[self = " << String(self) << " setContentView:_view = " << String(_view) << "]...");
