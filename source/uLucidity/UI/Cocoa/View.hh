@@ -45,8 +45,6 @@
     @property (assign) NSImage* logo;
     @property (assign) Button* logoB;
 
-    @property (assign) NSImage* contentImage;
-
     @property (assign) NSImage* max;
     @property (assign) NSImage* maxr;
     @property (assign) NSImage* maxs;
@@ -57,7 +55,10 @@
     @property (assign) NSImage* mins;
     @property (assign) Button* minB;
 
-    @property (assign) NSImage* sk;
+    @property (assign) NSImage* contentImage;
+    @property (assign) Button* contentB;
+
+    /*@property (assign) NSImage* sk;
     @property (assign) NSImage* skr;
     @property (assign) NSImage* sks;
     @property (assign) Button* skB;
@@ -78,7 +79,8 @@
     @property (assign) NSImage* sd;
     @property (assign) NSImage* sdr;
     @property (assign) NSImage* sds;
-    @property (assign) Button* sdB;
+    @property (assign) Button* sdB;*/
+
     @property (assign) Button* selectedButton;
 
     @property (assign) int sp;

@@ -314,6 +314,15 @@ public:
         LOG_DEBUG("return false...");
         return false;
     }
+    virtual bool onContentClicked() {
+        PluginSignals* to = ForwardPluginSignalsTo();
+        if ((to)) {
+            LOG_DEBUG("return to->onContentClicked()...");
+            return to->onContentClicked();
+        }
+        LOG_DEBUG("return false...");
+        return false;
+    }
 
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
