@@ -104,7 +104,8 @@
 
             _contentImage = [_images content];
 
-            /*_sk = [_images sk];
+            /*/
+            _sk = [_images sk];
             _skr = [_images skr];
             _sks = [_images sks];
 
@@ -122,7 +123,8 @@
 
             _sd = [_images sd];
             _sdr = [_images sdr];
-            _sds = [_images sds];*/
+            _sds = [_images sds];
+            /*/
             return self;
         }
         return nil;
@@ -155,7 +157,8 @@
             [self addSubview:_contentB];
         }
 
-        /*if ((_skB = [[Button alloc] initWithRect:[self skRect:rect]
+        /*/
+        if ((_skB = [[Button alloc] initWithRect:[self skRect:rect]
             image:_sk alternateImage:_sks  overImage: _skr
             target:self action:@selector(skClicked:)])) {
             [self addSubview:_skB];
@@ -190,7 +193,8 @@
             [_brB setEnterAction:@selector(brEntered:)];
             [_brB setExitAction:@selector(brExited:)];
             [self addSubview:_brB];
-        }*/
+        }
+        /*/
         return self;
     }
 
@@ -206,7 +210,8 @@
             [_minB setFrame:[self minRect:rect]];
         }
 
-        /*if ((_skB)) {
+        /*/
+        if ((_skB)) {
             [_skB setFrame:[self skRect:rect]];
         }
         if ((_svB)) {
@@ -225,7 +230,8 @@
 
         if ((_brB)) {
             [_brB setFrame:[self brRect:rect]];
-        }*/
+        }
+        /*/
         return self;
     }
 
@@ -340,7 +346,8 @@
         application:(NSApplication*)application window:(NSWindow*)window {
     }
 
-    /*- (void)skClicked:(id)sender {
+    /*/
+    - (void)skClicked:(id)sender {
         Signals* handlers = Signals::handlers();
         [self selectButton:_skB];
         if ((handlers) && (handlers->onuKeeperClicked())) {
@@ -396,7 +403,8 @@
             LOG_DEBUG("br = _outBr; _outBr = _brr...");
             _br = _outBr; _outBr = _brr;
         }
-    }*/
+    }
+    /*/
 
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
@@ -417,11 +425,13 @@
         [_min drawInRect:[self minRect:bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1];
         [_max drawInRect:[self maxRect:bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1];
 
-        /*[_sw drawInRect:[self swRect:bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1];
+        /*/
+        [_sw drawInRect:[self swRect:bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1];
         [_sk drawInRect:[self skRect:bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1];
         [_sv drawInRect:[self svRect:bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1];
         [_sd drawInRect:[self sdRect:bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1];
-        [_op drawInRect:[self opRect:bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1];*/
+        [_op drawInRect:[self opRect:bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1];
+        /*/
 
         [_l drawInRect:[self lRect:bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1];
         [_t drawInRect:[self tRect:bounds] fromRect:NSZeroRect operation:NSCompositeSourceAtop fraction:1];
@@ -555,7 +565,8 @@
         return rect;
     }
 
-    /*///////////////////////////////////////////////////////////////////////
+    /*/
+    ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
     - (NSRect)swRect:(NSRect)rect {
         if ((_tl) && (_tr) && (_bl) && (_br)) {
@@ -604,5 +615,6 @@
             rect.size.height = [_sd pixelsSize].height;
         }
         return rect;
-    }*/
+    }
+    /*/
 @end

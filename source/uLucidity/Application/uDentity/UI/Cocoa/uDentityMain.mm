@@ -28,12 +28,14 @@
 ///         Date: 10/9/2025
 ///////////////////////////////////////////////////////////////////////
 @implementation uDentityMain
+
     ///////////////////////////////////////////////////////////////////////
     /// allocWindow
     - (Window*)allocWindow:(NSRect)contentRect {
         NSApplication* _application = [super application];
         Images* _images = [super images];
         Window* window = nil;
+
         LOG_DEBUG("[[uDentityWindow alloc] initWithRect:contentRect application:_application images:_images]...");
         if ((window = [[uDentityWindow alloc] initWithRect:contentRect application:_application images:_images])) {
             LOG_DEBUG("..." << String(window) << " = [[uDentityWindow alloc] initWithRect:contentRect application:_application images:_images]");
@@ -42,12 +44,22 @@
         }
         return window;
     }
+
     ///////////////////////////////////////////////////////////////////////
     /// loadPlugin / unloadPlugin
     - (uLucidity::UI::PluginLibrary*)loadPlugin {
-        return nil;
+        uLucidity::UI::PluginLibrary* pluginLibrary = nil;
+
+        LOG_DEBUG("((pluginLibrary = [super loadPlugin]))...");
+        if ((pluginLibrary = [super loadPlugin])) {
+            LOG_DEBUG("...((" << String(pluginLibrary) << " = [super loadPlugin]))");
+        } else {LOG_DEBUG("...failed on ((" << String(pluginLibrary) << " = [super loadPlugin]))");}
+        return pluginLibrary;
     }
     - (void)unloadPlugin {
+        LOG_DEBUG("[super unloadPlugin]...");
+        [super unloadPlugin];
+        LOG_DEBUG("...[super unloadPlugin]");
     }
 @end
 
