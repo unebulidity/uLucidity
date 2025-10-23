@@ -57,6 +57,7 @@
         _minrName = @ULUCIDITY_UI_COCOA_IMAGE_MINR;
         _minsName = @ULUCIDITY_UI_COCOA_IMAGE_MINS;
 
+        /*/
         _skName = @ULUCIDITY_UI_COCOA_IMAGE_U_KEEPER;
         _skrName = @ULUCIDITY_UI_COCOA_IMAGE_U_KEEPERR;
         _sksName = @ULUCIDITY_UI_COCOA_IMAGE_U_KEEPERS;
@@ -76,6 +77,7 @@
         _sdName = @ULUCIDITY_UI_COCOA_IMAGE_SHUTDOWN;
         _sdrName = @ULUCIDITY_UI_COCOA_IMAGE_SHUTDOWNR;
         _sdsName = @ULUCIDITY_UI_COCOA_IMAGE_SHUTDOWNS;
+        /*/
         return self;
     }
 
@@ -108,6 +110,7 @@
         _minr = [self loadImage:[self minrName]];
         _mins = [self loadImage:[self minsName]];
 
+        /*/
         _sk = [self loadImage:[self skName]];
         _skr = [self loadImage:[self skrName]];
         _sks = [self loadImage:[self sksName]];
@@ -127,6 +130,7 @@
         _sd = [self loadImage:[self sdName]];
         _sdr = [self loadImage:[self sdrName]];
         _sds = [self loadImage:[self sdsName]];
+        /*/
         return self;
     }
 

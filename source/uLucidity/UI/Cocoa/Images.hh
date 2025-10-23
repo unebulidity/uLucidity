@@ -45,6 +45,7 @@
 #define ULUCIDITY_UI_COCOA_IMAGE_RESR    "sysresr.png"
 #define ULUCIDITY_UI_COCOA_IMAGE_RESS    "sysress.png"
 
+/*/
 #define ULUCIDITY_UI_COCOA_IMAGE_U_KEEPER "ukeeper.png"
 #define ULUCIDITY_UI_COCOA_IMAGE_U_KEEPERR "ukeeperr.png"
 #define ULUCIDITY_UI_COCOA_IMAGE_U_KEEPERS "ukeepers.png"
@@ -64,6 +65,7 @@
 #define ULUCIDITY_UI_COCOA_IMAGE_SHUTDOWN      "shutdown.png"
 #define ULUCIDITY_UI_COCOA_IMAGE_SHUTDOWNR     "shutdownr.png"
 #define ULUCIDITY_UI_COCOA_IMAGE_SHUTDOWNS     "shutdowns.png"
+/*/
 
 ///////////////////////////////////////////////////////////////////////
 /// Interface: Images
@@ -99,6 +101,7 @@
     @property (assign) NSString* minrName;
     @property (assign) NSString* minsName;
 
+    /*/
     @property (assign) NSString* skName;
     @property (assign) NSString* skrName;
     @property (assign) NSString* sksName;
@@ -118,6 +121,7 @@
     @property (assign) NSString* sdName;
     @property (assign) NSString* sdrName;
     @property (assign) NSString* sdsName;
+    /*/
 
     @property (assign) Image* l;
     @property (assign) Image* t;
@@ -147,6 +151,7 @@
     @property (assign) Image* resr;
     @property (assign) Image* ress;
 
+    /*/
     @property (assign) Image* sk;
     @property (assign) Image* skr;
     @property (assign) Image* sks;
@@ -166,6 +171,7 @@
     @property (assign) Image* sd;
     @property (assign) Image* sdr;
     @property (assign) Image* sds;
+    /*/
 
     - (Images*)init:(NSApplication*)application;
 @end
