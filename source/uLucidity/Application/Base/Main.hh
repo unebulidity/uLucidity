@@ -25,6 +25,8 @@
 #include "xos/base/string.hpp"
 #include "xos/base/logger.hpp"
 
+#if defined(APPLEIOS)
+#else /// defined(APPLEIOS)
 #define LOG_ANY   LOGGER_LOG_ANY  
 #define LOG_FATAL LOGGER_LOG_FATAL
 #define LOG_ERROR LOGGER_LOG_ERROR
@@ -32,6 +34,7 @@
 #define LOG_INFO  LOGGER_LOG_INFO 
 #define LOG_DEBUG LOGGER_LOG_DEBUG
 #define LOG_TRACE LOGGER_LOG_TRACE
+#endif /// defined(APPLEIOS)
 
 namespace uLucidity {
 namespace Application {

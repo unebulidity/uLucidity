@@ -129,6 +129,18 @@
 }
 
 ///////////////////////////////////////////////////////////////////////
+/// onThreadWillStart
+- (void)onThreadWillStart:(uDentifyThread*)thread {
+    NSLog(@"...onThreadWillStart");
+    NSLog(@"((thread))...");
+    if ((thread)) {
+        NSLog(@"...((thread))");
+    } else {
+        NSLog(@"...failed on ((thread))");
+    }
+}
+
+///////////////////////////////////////////////////////////////////////
 /// onThreadFnished
 - (void)onThreadFnished:(uDentifyThread*)thread {
     NSLog(@"...onThreadFnished");

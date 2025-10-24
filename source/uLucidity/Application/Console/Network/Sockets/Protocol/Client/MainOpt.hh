@@ -21,7 +21,7 @@
 #ifndef ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_PROTOCOL_CLIENT_MAINOPT_HH
 #define ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_PROTOCOL_CLIENT_MAINOPT_HH
 
-#include "xos/base/base.hh"
+#include "uLucidity/Application/Console/Network/Sockets/Client/MainOpt.hh"
 
 namespace uLucidity {
 namespace Application {

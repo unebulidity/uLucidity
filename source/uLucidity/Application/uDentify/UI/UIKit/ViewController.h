@@ -18,7 +18,8 @@
 /// Author: $author$
 ///   Date: 10/20/2025
 //////////////////////////////////////////////////////////////////////////
-#import <UIKit/UIKit.h>
+//#import <UIKit/UIKit.h>
+#include "uLucidity/UI/UIKit/UIKit.h"
 #include "uLucidity/Application/uDentify/UI/UIKit/uDentifyThread.hh"
 
 @interface ViewController : UIViewController
@@ -43,6 +44,9 @@
 
 @property (assign) BOOL threadDone;
 @property (strong, nonatomic) uDentifyThread *thread;
+///////////////////////////////////////////////////////////////////////
+/// onThreadWillStart
+- (void)onThreadWillStart:(uDentifyThread*)thread;
 ///////////////////////////////////////////////////////////////////////
 /// onThreadFnished
 - (void)onThreadFnished:(uDentifyThread*)thread;

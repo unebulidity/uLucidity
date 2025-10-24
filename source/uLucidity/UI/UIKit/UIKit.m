@@ -1,4 +1,5 @@
-//////////////////////////////////////////////////////////////////////////
+/*/
+///////////////////////////////////////////////////////////////////////////
 /// Copyright (c) 1988-2025 $organization$
 ///
 /// This software is provided by the author and contributors ``as is''
@@ -13,18 +14,11 @@
 /// or otherwise) arising in any way out of the use of this software,
 /// even if advised of the possibility of such damage.
 ///
-///   File: AppDelegate.h
+///   File: UIKit.m
 ///
 /// Author: $author$
-///   Date: 10/20/2025
+///   Date: 10/24/2025
 //////////////////////////////////////////////////////////////////////////
-//#import <UIKit/UIKit.h>
+/*/
 #include "uLucidity/UI/UIKit/UIKit.h"
-
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
-
-@property (strong, nonatomic) UIWindow *window;
-
-
-@end
 
