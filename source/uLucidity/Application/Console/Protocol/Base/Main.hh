@@ -59,7 +59,9 @@ public:
       default_udentify_user_(nameof_udentify_user_), 
       default_udentify_resource_(nameof_udentify_resource_), 
       default_udentify_password_(nameof_udentify_password_),
+      unknown_udentify_password_(valueof_unknown_udentify_password_), 
 
+      udentify_password_known_(valueof_unknown_udentify_password_),
       udentify_user_(default_udentify_user_), 
       udentify_resource_(default_udentify_resource_), 
       udentify_password_(default_udentify_password_),
@@ -251,6 +253,27 @@ protected:
         return (string_t&)default_udentify_password_;
     }
     //////////////////////////////////////////////////////////////////////////
+    /// ...unknown_udentify_password
+    virtual string_t& set_unknown_udentify_password(const string_t& to) {
+        string_t& unknown_udentify_password = this->unknown_udentify_password();
+        unknown_udentify_password.assign(to);
+        return unknown_udentify_password;
+    }
+    virtual string_t& set_unknown_udentify_password(const char_t* to) {
+        string_t& unknown_udentify_password = this->unknown_udentify_password();
+        unknown_udentify_password.assign(to);
+        return unknown_udentify_password;
+    }
+    virtual string_t& unknown_udentify_password() const {
+        return (string_t&)unknown_udentify_password_;
+    }
+public:
+    virtual const string_t& get_unknown_udentify_password() const {
+        const string_t& unknown_udentify_password = this->unknown_udentify_password();
+        return unknown_udentify_password;
+    }
+protected:
+    //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
     /// ...udentify_user
@@ -267,6 +290,12 @@ protected:
     virtual string_t& udentify_user() const {
         return (string_t&)udentify_user_;
     }
+public:
+    virtual const string_t& get_udentify_user() const {
+        const string_t& udentify_user = this->udentify_user();
+        return udentify_user;
+    }
+protected:
     //////////////////////////////////////////////////////////////////////////
     /// ...udentify_resource
     virtual string_t& set_udentify_resource(const string_t& to) {
@@ -282,6 +311,33 @@ protected:
     virtual string_t& udentify_resource() const {
         return (string_t&)udentify_resource_;
     }
+public:
+    virtual const string_t& get_udentify_resource() const {
+        const string_t& udentify_resource = this->udentify_resource();
+        return udentify_resource;
+    }
+protected:
+    //////////////////////////////////////////////////////////////////////////
+    /// ...udentify_password_known
+    virtual string_t& set_udentify_password_known(const string_t& to) {
+        string_t& udentify_password_known = this->udentify_password_known();
+        udentify_password_known.assign(to);
+        return udentify_password_known;
+    }
+    virtual string_t& set_udentify_password_known(const char_t* to) {
+        string_t& udentify_password_known = this->udentify_password_known();
+        udentify_password_known.assign(to);
+        return udentify_password_known;
+    }
+    virtual string_t& udentify_password_known() const {
+        return (string_t&)udentify_password_known_;
+    }
+public:
+    virtual const string_t& get_udentify_password_known() const {
+        const string_t& udentify_password_known = this->udentify_password_known();
+        return udentify_password_known;
+    }
+protected:
     //////////////////////////////////////////////////////////////////////////
     /// ...udentify_password
     virtual string_t& set_udentify_password(const string_t& to) {
@@ -297,6 +353,12 @@ protected:
     virtual string_t& udentify_password() const {
         return (string_t&)udentify_password_;
     }
+public:
+    virtual const string_t& get_udentify_password() const {
+        const string_t& udentify_password = this->udentify_password();
+        return udentify_password;
+    }
+protected:
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
@@ -481,6 +543,12 @@ protected:
     virtual string_t& udentify_response_message() const {
         return (string_t&)udentify_response_message_;
     }
+public:
+    virtual const string_t& get_udentify_response_message() const {
+        const string_t& udentify_response_message = this->udentify_response_message();
+        return udentify_response_message;
+    }
+protected:
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
@@ -613,8 +681,8 @@ protected:
     string_t udentity_path_, 
              valueof_unknown_udentify_user_, valueof_unknown_udentify_resource_, valueof_unknown_udentify_password_,
              nameof_udentify_user_, nameof_udentify_resource_, nameof_udentify_password_,
-             default_udentify_user_, default_udentify_resource_, default_udentify_password_,
-             udentify_user_, udentify_resource_, udentify_password_,
+             default_udentify_user_, default_udentify_resource_, default_udentify_password_, unknown_udentify_password_,
+             udentify_user_, udentify_resource_, udentify_password_, udentify_password_known_,
              begin_udentify_resource_, begin_udentify_password_,
              begin_udentify_message_, endof_udentify_message_, 
              udentify_request_message_, udentify_response_message_, 

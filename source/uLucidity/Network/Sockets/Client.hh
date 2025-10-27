@@ -84,6 +84,7 @@ protected:
     }
     virtual int on_after_receive(string &target, const string &source) {
         int err = 0;
+        LOG_INFO("...");
         return err;
     }
 

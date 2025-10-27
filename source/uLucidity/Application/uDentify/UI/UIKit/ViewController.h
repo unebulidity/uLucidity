@@ -42,13 +42,17 @@
 - (IBAction)Clear:(id)sender;
 - (IBAction)Done:(id)sender;
 
+@property (assign) BOOL valueUnset;
 @property (assign) BOOL threadDone;
 @property (strong, nonatomic) uDentifyThread *thread;
 ///////////////////////////////////////////////////////////////////////
 /// onThreadWillStart
-- (void)onThreadWillStart:(uDentifyThread*)thread;
+- (void)onThreadWillStart:(NSThread*)thread;
 ///////////////////////////////////////////////////////////////////////
 /// onThreadFnished
-- (void)onThreadFnished:(uDentifyThread*)thread;
+- (void)onThreadFnished:(NSThread*)thread;
+///////////////////////////////////////////////////////////////////////
+/// onThreadResult
+- (void)onThreadResult:(NSString*)result;
 @end
 

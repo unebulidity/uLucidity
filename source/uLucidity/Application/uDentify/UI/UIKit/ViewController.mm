@@ -60,7 +60,8 @@
     self.Done.layer.cornerRadius = 9.0;
     self.Done.clipsToBounds = YES;
 
-    _threadDone = YES;
+    self.valueUnset = YES;
+    self.threadDone = YES;
     NSLog(@"((_thread = [[uDentifyThread alloc] init]))...");
     if ((_thread = [[uDentifyThread alloc] init])) {
         NSLog(@"...((_thread = [[uDentifyThread alloc] init]))");
@@ -100,16 +101,16 @@
 
     NSLog(@"((_thread))...");
     if ((_thread)) {
-        NSLog(@"(!(self.Value.text))...");
-        if ((_threadDone)) {
-            _threadDone = NO;
+        NSLog(@"((self.threadDone))...");
+        if ((self.threadDone)) {
+            self.threadDone = NO;
             NSLog(@"self.Value.text = nil...");
             self.Value.text = nil;
             NSLog(@"[_thread start:self]...");
             [_thread start:self];
             NSLog(@"...[_thread start:self]");
         } else {
-            NSLog(@"...failed on ((_threadDone))");
+            NSLog(@"...failed on ((self.threadDone))");
         }
     } else {
         NSLog(@"...failed on ((_thread))");;
@@ -130,28 +131,51 @@
 
 ///////////////////////////////////////////////////////////////////////
 /// onThreadWillStart
-- (void)onThreadWillStart:(uDentifyThread*)thread {
+- (void)onThreadWillStart:(NSThread*)thread {
     NSLog(@"...onThreadWillStart");
-    NSLog(@"((thread))...");
-    if ((thread)) {
-        NSLog(@"...((thread))");
+    NSLog(@"((_thread))...");
+    if ((_thread)) {
+        NSLog(@"...((_thread))");
     } else {
-        NSLog(@"...failed on ((thread))");
+        NSLog(@"...failed on ((_thread))");
     }
 }
 
 ///////////////////////////////////////////////////////////////////////
 /// onThreadFnished
-- (void)onThreadFnished:(uDentifyThread*)thread {
+- (void)onThreadFnished:(NSThread*)thread {
     NSLog(@"...onThreadFnished");
-    NSLog(@"((thread))...");
-    if ((thread)) {
-        NSLog(@"self.Value.text = self.Password.text...");
-        self.Value.text = self.Password.text;
-        NSLog(@"...self.Value.text = self.Password.text");
-        _threadDone = YES;
+    NSLog(@"((_thread))...");
+    if ((_thread)) {
+        NSLog(@"((self.valueUnset))...");
+        if ((self.valueUnset)) {
+            NSLog(@"...((self.valueUnset))");
+            NSLog(@"self.Value.text = self.Password.text...");
+            self.Value.text = self.Password.text;
+            NSLog(@"...self.Value.text = self.Password.text");
+        } else {
+            NSLog(@"...failed on ((self.valueUnset))");
+        }
+        self.valueUnset = YES;
+        self.threadDone = YES;
     } else {
-        NSLog(@"...failed on ((thread))");
+        NSLog(@"...failed on ((_thread))");
     }
 }
+
+///////////////////////////////////////////////////////////////////////
+/// onThreadResult
+- (void)onThreadResult:(NSString*)result {
+    NSLog(@"...onThreadResult");
+    NSLog(@"((result))...");
+    if ((result)) {
+        NSLog(@"self.Value.text = %@%@", result, @"...");
+        self.Value.text = result;
+        NSLog(@"...self.Value.text = %@", result);
+        self.valueUnset = NO;
+    } else {
+        NSLog(@"...failed on ((result))");
+    }
+}
+
 @end

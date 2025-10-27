@@ -13,55 +13,28 @@
 /// or otherwise) arising in any way out of the use of this software, 
 /// even if advised of the possibility of such damage.
 ///
-///   File: uDentifyThread.hh
+///   File: Main.mm
 ///
 /// Author: $author$
-///   Date: 10/21/2025, 10/26/2025
+///   Date: 10/26/2025
 //////////////////////////////////////////////////////////////////////////
-#ifndef ULUCIDITY_APPLICATION_UDENTIFY_UI_UIKIT_UDENTIFYTHREAD_HH
-#define ULUCIDITY_APPLICATION_UDENTIFY_UI_UIKIT_UDENTIFYTHREAD_HH
-
-#include "uLucidity/UI/UIKit/UIKit.hh"
+#include "uLucidity/Application/uDentify/UI/UIKit/Network/Sockets/Client/Main.hh"
 
 namespace uLucidity {
 namespace Application {
 namespace uDentify {
 namespace UI {
 namespace UIKit {
+namespace Network {
+namespace Sockets {
+namespace Client {
 
+} /// namespace Client 
+} /// namespace Sockets 
+} /// namespace Network 
 } /// namespace UIKit 
 } /// namespace UI 
 } /// namespace uDentify 
 } /// namespace Application 
 } /// namespace uLucidity 
-
-///////////////////////////////////////////////////////////////////////
-/// Interface: uDentifyThread
-///
-///    Author: $author$
-///      Date: 10/9/2025
-///////////////////////////////////////////////////////////////////////
-@interface uDentifyThread: NSObject {
-    }
-    @property (assign) NSObject* view;
-    @property (assign) NSObject* thread;
-
-    ///////////////////////////////////////////////////////////////////////
-    /// start
-    - (void)start:(NSObject*)view;
-  
-    ///////////////////////////////////////////////////////////////////////
-    /// run
-    - (void)run;
-  
-    ///////////////////////////////////////////////////////////////////////
-    /// onWillStart
-    - (void)onWillStart:(NSObject *)thread;
-
-    ///////////////////////////////////////////////////////////////////////
-    /// onFnished
-    - (void)onFnished:(NSObject*)thread;
-@end
-
-#endif /// ndef ULUCIDITY_APPLICATION_UDENTIFY_UI_UIKIT_UDENTIFYTHREAD_HH
 

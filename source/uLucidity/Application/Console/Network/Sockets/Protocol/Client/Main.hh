@@ -259,6 +259,7 @@ protected:
             const string_t& default_user = this->default_udentify_user();
             const string_t& default_resource = this->default_udentify_resource();
             const string_t& default_password = this->default_udentify_password();
+            const string_t& unknown_password = this->unknown_udentify_password();
             const string_t& user = this->udentify_user();
             const string_t& resource = this->udentify_resource();
             const string_t& password = this->udentify_password();
@@ -297,9 +298,11 @@ protected:
                 this->set_udentify_password(result);
             } else {
                 LOGGER_IS_LOGGED_INFO("...failed on (0 < (result.length()))");
-                LOGGER_IS_LOGGED_INFO("this->set_udentify_password(\"" << default_password << "\")...");
-                this->set_udentify_password(default_password);
+                LOGGER_IS_LOGGED_INFO("this->set_udentify_password(\"" << unknown_password << "\")...");
+                this->set_udentify_password(unknown_password);
             }
+            LOGGER_IS_LOGGED_INFO("this->set_udentify_password_known(\"" << password << "\")...");
+            this->set_udentify_password_known(password);
             LOGGER_IS_LOGGED_INFO("this->set_udentify_response_message()...");
             this->set_udentify_response_message();
             LOGGER_IS_LOGGED_INFO("response.assign(\"" << (this->udentify_response_message()) << "\")...");

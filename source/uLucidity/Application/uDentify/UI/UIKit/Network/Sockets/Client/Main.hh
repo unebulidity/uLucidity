@@ -16,20 +16,19 @@
 ///   File: Main.hh
 ///
 /// Author: $author$
-///   Date: 10/22/2025
+///   Date: 10/26/2025
 //////////////////////////////////////////////////////////////////////////
-#ifndef ULUCIDITY_APPLICATION_UDENTIFY_UI_COCOA_NETWORK_SOCKETS_CLIENT_MAIN_HH
-#define ULUCIDITY_APPLICATION_UDENTIFY_UI_COCOA_NETWORK_SOCKETS_CLIENT_MAIN_HH
+#ifndef ULUCIDITY_APPLICATION_UDENTIFY_UI_UIKIT_NETWORK_SOCKETS_CLIENT_MAIN_HH
+#define ULUCIDITY_APPLICATION_UDENTIFY_UI_UIKIT_NETWORK_SOCKETS_CLIENT_MAIN_HH
 
 #include "uLucidity/Application/Network/Sockets/Client/Main.hh"
-#include "uLucidity/Application/Console/Network/Sockets/Protocol/Client/Main.hh"
 #include "uLucidity/Application/Client/Main.hh"
 
 namespace uLucidity {
 namespace Application {
 namespace uDentify {
 namespace UI {
-namespace Cocoa {
+namespace UIKit {
 namespace Network {
 namespace Sockets {
 namespace Client {
@@ -39,14 +38,12 @@ namespace Client {
 template 
 <class TEvents = uLucidity::Application::Network::Sockets::Base::Main::Events,
  class TMain = uLucidity::Application::Network::Sockets::Client::Main, 
- class TProtocolMain = uLucidity::Application::Console::Network::Sockets::Protocol::Client::Main, 
  class TExtends = uLucidity::Application::Client::Main, 
  class TImplements = typename TExtends::Implements>
 class exported Maint: virtual public TEvents, virtual public TImplements, public TExtends {
 public:
     typedef TEvents Events;
     typedef TMain Main;
-    typedef TProtocolMain ProtocolMain;
     typedef TImplements Implements;
     typedef TExtends Extends;
     typedef Maint Derives;
@@ -80,15 +77,9 @@ public:
         }
         return err;
     }
-    ///////////////////////////////////////////////////////////////////////
-    virtual int on_after_receive(string &target, const string &source) {
-        int err = 0;
-        if (!(err = protocol_main_.all_process_response_to_request(target, source))) {} else {}
-        return err;
-    }
     //////////////////////////////////////////////////////////////////////////
     virtual const string& get_target_result() const {
-        const string& target_result =  protocol_main_.get_udentify_password_known();
+        const string& target_result =  main_.get_target_result();
         return target_result;
     }
     //////////////////////////////////////////////////////////////////////////
@@ -97,17 +88,17 @@ protected:
     //////////////////////////////////////////////////////////////////////////
 protected:
     Main main_;
-    ProtocolMain protocol_main_;
 }; /// class Maint
 typedef Maint<> Main;
 
 } /// namespace Client 
 } /// namespace Sockets 
 } /// namespace Network 
-} /// namespace Cocoa 
+} /// namespace UIKit 
 } /// namespace UI 
 } /// namespace uDentify 
 } /// namespace Application 
 } /// namespace uLucidity 
 
-#endif /// ndef ULUCIDITY_APPLICATION_UDENTIFY_UI_COCOA_NETWORK_SOCKETS_CLIENT_MAIN_HH
+#endif /// ndef ULUCIDITY_APPLICATION_UDENTIFY_UI_UIKIT_NETWORK_SOCKETS_CLIENT_MAIN_HH
+

@@ -108,14 +108,14 @@ namespace Cocoa {
 
     ///////////////////////////////////////////////////////////////////////
     /// onThreadWillStart
-    - (void)onThreadWillStart:(uDentifyThread*)thread {
+    - (void)onThreadWillStart:(NSThread*)thread {
         NSApplication* application = nil;
     
-        LOG_DEBUG("((_threadWillStart = (thread = " << String(thread) << ")))...");
-        if ((_threadWillStart = (thread))) {
-            LOG_DEBUG("...((_threadWillStart = (thread = " << String(thread) << ")))");
+        LOG_DEBUG("((_threadWillStart = (_thread = " << String(_thread) << ")))...");
+        if ((_threadWillStart = (_thread))) {
+            LOG_DEBUG("...((_threadWillStart = (_thread = " << String(_thread) << ")))");
         } else {
-            LOG_DEBUG("...failed on ((_threadWillStart = (thread = " << String(thread) << ")))");
+            LOG_DEBUG("...failed on ((_threadWillStart = (_thread = " << String(_thread) << ")))");
         }
         LOG_DEBUG("((application = [self application]))...");
         if ((application = [self application])) {
@@ -132,14 +132,14 @@ namespace Cocoa {
 
     ///////////////////////////////////////////////////////////////////////
     /// onThreadFnished
-    - (void)onThreadFnished:(uDentifyThread*)thread {
+    - (void)onThreadFnished:(NSThread*)thread {
         NSApplication* application = nil;
 
-        LOG_DEBUG("((thread = " << String(thread) << "))...");
-        if ((thread)) {
-            LOG_DEBUG("...((thread = " << String(thread) << "))");
+        LOG_DEBUG("((_thread = " << String(_thread) << "))...");
+        if ((_thread)) {
+            LOG_DEBUG("...((_thread = " << String(_thread) << "))");
         } else {
-            LOG_DEBUG("...failed on ((thread = " << String(thread) << "))");
+            LOG_DEBUG("...failed on ((_thread = " << String(_thread) << "))");
         }
         LOG_DEBUG("((application = [self application]))...");
         if ((application = [self application])) {
@@ -154,5 +154,24 @@ namespace Cocoa {
         }
         LOG_DEBUG("_threadWillStart = nil...");
         _threadWillStart = nil;
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    /// onThreadResult
+    - (void)onThreadResult:(NSString*)result {
+
+        LOG_DEBUG("((result))...");
+        if ((result)) {
+            const char* chars = 0;
+            LOG_DEBUG("((chars = [result UTF8String]))...");
+            if ((chars = [result UTF8String])) {
+                LOG_DEBUG("...((\"" << chars << "\" = [result UTF8String]))");
+            } else {
+                LOG_DEBUG("...failed on ((" << String(chars) << " = [result UTF8String]))");
+            }
+            LOG_DEBUG("...((" << String(result) << "))");
+        } else {
+            LOG_DEBUG("...failed on ((" << String(result) << "))");
+        }
     }
 @end

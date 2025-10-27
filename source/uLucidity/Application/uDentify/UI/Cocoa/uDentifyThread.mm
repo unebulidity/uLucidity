@@ -73,10 +73,13 @@ Main the_main;
 
             LOG_DEBUG("_view = " << String(view) << "...");
             _view = view;
+
             LOG_DEBUG("_thread = " << String(thread) << "...");
             _thread = thread;
+
             LOG_DEBUG("[self onWillStart:thread]...");
             [self onWillStart:thread];
+
             LOG_DEBUG("[thread start]...");
             [thread start];
         } else {
@@ -124,8 +127,25 @@ Main the_main;
     - (void)onFnished:(NSObject *)thread {
         /// This method runs on the main thread
         /// Here you would typically update your UI elements.
+        const char* chars = 0; size_t length = 0;
         NSObject* view = nil;
 
+        LOG_DEBUG("((chars = uLucidity::Application::uDentify::UI::Cocoa::Network::Sockets::Client::the_main.get_target_result().has_chars(length)))...");
+        if ((chars = uLucidity::Application::uDentify::UI::Cocoa::Network::Sockets::Client::the_main.get_target_result().has_chars(length))) {
+            NSString* result= nil;
+
+            if ((result = [[NSString alloc] initWithData:[NSData dataWithBytes:chars length:length] encoding:NSASCIIStringEncoding])) {
+                LOG_DEBUG("((view = " << String(_view) << "))...");
+                if ((view = _view)) {
+                    LOG_DEBUG("[view performSelectorOnMainThread:@selector(onThreadResult:) withObject:" << String(result) << " waitUntilDone:NO];...");
+                    [view performSelectorOnMainThread:@selector(onThreadResult:) withObject:result waitUntilDone:NO];
+                } else {
+                    LOG_DEBUG("...failed on ((view = " << String(_view) << "))");
+                }
+            } else {}
+        } else {
+            LOG_DEBUG("...failed on ((chars = uLucidity::Application::uDentify::UI::Cocoa::Network::Sockets::Client::the_main.get_target_result().has_chars(" << length << ")))");
+        }
         LOG_DEBUG("((view = " << String(_view) << "))...");
         if ((view = _view)) {
             LOG_DEBUG("[view performSelectorOnMainThread:@selector(onThreadFnished:) withObject:" << String(thread) << " waitUntilDone:NO];...");
@@ -135,4 +155,3 @@ Main the_main;
         }
     }
 @end
-

@@ -119,18 +119,22 @@ public:
         //////////////////////////////////////////////////////////////////////////
         virtual int on_receive(char_t* chars, size_t length) { 
             int err = 0;
+            LOGGER_IS_LOGGED_INFO("...");
             return err;
         }
         virtual int on_begin_receive(char_t* chars, size_t length) { 
             int err = 0;
+            LOGGER_IS_LOGGED_INFO("...");
             return err;
         }
         virtual int on_end_receive(char_t* chars, size_t length) { 
             int err = 0;
+            LOGGER_IS_LOGGED_INFO("...");
             return err;
         }
         virtual int on_after_receive(string &target, const string &source) {
             int err = 0;
+            LOGGER_IS_LOGGED_INFO("...");
             return err;
         }
     protected:
@@ -245,6 +249,7 @@ protected:
                                         LOG_DEBUG("...(!(done = !(s.accept(sk, *ep))))");
                                         LOG_DEBUG("(0 < (count = sk.recv(receive_chars_, " << sizeof(receive_chars_) << ", 0)))...");
                                         if (0 < (count = sk.recv(receive_chars_, sizeof(receive_chars_), 0))) {
+                                            int unequal = 0;
                                             const char* to_chars = 0;
                                             size_t amount = count;
                                             string to_string;
@@ -252,7 +257,7 @@ protected:
                                             if ((endof_message_to_send_length <= count)) {
                                                 to_chars = receive_chars_+count-endof_message_to_send_length;
                                                 to_string.assign_chars(to_chars, endof_message_to_send_length);
-                                                if (endof_message_to_send_received = !(0 != (endof_message_to_send_.compare(to_string)))) {
+                                                if (endof_message_to_send_received = !(unequal = (endof_message_to_send_.compare(to_string)))) {
                                                     amount = (count -= endof_message_to_send_length);
                                                 } else {}
                                             } else {}
@@ -268,7 +273,7 @@ protected:
                                                             if ((endof_message_to_send_length <= count)) {
                                                                 to_chars = receive_chars_+count-endof_message_to_send_length;
                                                                 to_string.assign_chars(to_chars, endof_message_to_send_length);
-                                                                if (endof_message_to_send_received = !(0 != (endof_message_to_send_.compare(to_string)))) {
+                                                                if (endof_message_to_send_received = !(unequal = (endof_message_to_send_.compare(to_string)))) {
                                                                     count -= endof_message_to_send_length;
                                                                 } else {}
                                                             } else {}
@@ -434,6 +439,9 @@ protected:
                             LOG_DEBUG("if ((s.open(*tp)))...");
                             if ((s.open(*tp))) {
 
+                                LOG_DEBUG("set_source_parameter(\"" << source << "\")...");
+                                set_source_parameter(source);
+                                
                                 LOG_DEBUG("(this->*send)(s, *ep, chars, length)...");
                                 (this->*send)(s, *ep, chars, length);
                                 LOG_DEBUG("s.close()...");
@@ -557,6 +565,19 @@ protected:
 
                         LOG_DEBUG("(!(err = on_end_receive(receive_chars_, " << amount << ")))...");
                         if (!(err = on_end_receive(receive_chars_, amount))) {
+                            const string& source = this->source_parameter();
+                            string& target_result = this->target_result();
+                            string target(receive_chars_, amount);
+
+                            LOG_DEBUG("target_result.assign(\"" << target << "\")...");
+                            target_result.assign(target);
+                            
+                            LOG_DEBUG("(!(err = on_after_receive(\"" << target << "\", \"" << source << "\")))...");
+                            if (!(err = on_after_receive(target, source))) {
+                                LOG_DEBUG("...(!(" << err << " = on_after_receive(\"" << target << "\", \"" << source << "\")))");
+                            } else {
+                                LOG_DEBUG("...failed on (!(" << err << " = on_after_receive(\"" << target << "\", \"" << source << "\")))");
+                            }
                             LOG_DEBUG("...(!(" << err << " = on_end_receive(receive_chars_, " << amount << ")))");
                         } else {
                             LOG_DEBUG("...failed on (!(" << err << " = on_begin_receive(receive_chars_, " << amount << ")))");
@@ -1065,6 +1086,41 @@ protected:
     ///////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
+public:
+    virtual const string& get_target_result() const {
+        const string& target_result = this->target_result();
+        return target_result;
+    }
+protected:
+    virtual string& set_target_result(const string& to) {
+        string& target_result = this->target_result();
+        target_result.assign(to);
+        return target_result;
+    }
+    virtual string& target_result() const {
+        return (string&)target_result_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    virtual string& set_target_parameter(const string& to) {
+        string& target_parameter = this->target_parameter();
+        target_parameter.assign(to);
+        return target_parameter;
+    }
+    virtual string& target_parameter() const {
+        return (string&)target_parameter_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    virtual string& set_source_parameter(const string& to) {
+        string& source_parameter = this->source_parameter();
+        source_parameter.assign(to);
+        return source_parameter;
+    }
+    virtual string& source_parameter() const {
+        return (string&)source_parameter_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
 protected:
     bool restart_, stop_;
     bool accept_one_, accept_done_, accept_restart_;
@@ -1093,6 +1149,7 @@ protected:
     xos::network::sockets::ip::v6::udp::transport ip_v6_udp_tp_;
 #else /// !defined(WINSOCK_1)
 #endif /// !defined(WINSOCK_1)
+    string source_parameter_, target_parameter_, target_result_;
     char_t receive_chars_[ULUCIDITY_NETWORK_SOCKETS_BASE_RECEIVE_SIZE];
 }; /// class Maint
 typedef Maint<> Main;

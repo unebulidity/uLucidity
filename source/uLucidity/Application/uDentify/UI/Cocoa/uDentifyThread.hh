@@ -16,7 +16,7 @@
 ///   File: uDentifyThread.hh
 ///
 /// Author: $author$
-///   Date: 10/22/2025
+///   Date: 10/22/2025, 10/25/2025
 //////////////////////////////////////////////////////////////////////////
 #ifndef ULUCIDITY_APPLICATION_UDENTIFY_UI_COCOA_UDENTIFYTHREAD_HH
 #define ULUCIDITY_APPLICATION_UDENTIFY_UI_COCOA_UDENTIFYTHREAD_HH
@@ -54,6 +54,10 @@ namespace Cocoa {
     /// run
     - (void)run;
   
+    ///////////////////////////////////////////////////////////////////////
+    /// onWillStart
+    - (void)onWillStart:(NSObject *)thread;
+
     ///////////////////////////////////////////////////////////////////////
     /// onFnished
     - (void)onFnished:(NSObject*)thread;

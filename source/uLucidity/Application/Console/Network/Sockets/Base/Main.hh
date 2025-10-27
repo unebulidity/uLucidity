@@ -16,7 +16,7 @@
 ///   File: Main.hh
 ///
 /// Author: $author$
-///   Date: 10/5/2025
+///   Date: 10/5/2025, 10/25/2025
 //////////////////////////////////////////////////////////////////////////
 #ifndef ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_BASE_MAIN_HH
 #define ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_BASE_MAIN_HH
@@ -26,13 +26,13 @@
 #include "uLucidity/Application/Network/Sockets/Client/Main.hh"
 #include "uLucidity/Application/Network/Sockets/Server/Main.hh"
 
-/*
+/*/
 #define ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_UDENTIFY_DEFAULT_REQUEST \
     "{\"password\":{\"user\":\"user\",\"resource\":\"resource\",\"password\":\"password\"}}"
 
 #define ULUCIDITY_APPLICATION_CONSOLE_NETWORK_SOCKETS_UDENTIFY_DEFAULT_RESPONSE \
     "{\"password\":\"unknown\"}"
-*/
+/*/
 namespace uLucidity {
 namespace Application {
 namespace Console {

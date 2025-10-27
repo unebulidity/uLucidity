@@ -64,11 +64,15 @@ namespace Cocoa {
 
     ///////////////////////////////////////////////////////////////////////
     /// onThreadWillStart
-    - (void)onThreadWillStart:(uDentifyThread*)thread;
+    - (void)onThreadWillStart:(NSThread*)thread;
 
     ///////////////////////////////////////////////////////////////////////
     /// onThreadFnished
-    - (void)onThreadFnished:(uDentifyThread*)thread;
+    - (void)onThreadFnished:(NSThread*)thread;
+
+    ///////////////////////////////////////////////////////////////////////
+    /// onThreadResult
+    - (void)onThreadResult:(NSString*)result;
 @end
 
 #endif /// ndef ULUCIDITY_APPLICATION_UDENTIFY_UI_COCOA_UDENTIFYVIEW_HH
