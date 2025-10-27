@@ -333,6 +333,12 @@ protected:
         return (string_t&)udentify_password_known_;
     }
 public:
+    virtual const string_t& set_udentify_password_unknown() {
+        const string_t& valueof_unknown_udentify_password = this->valueof_unknown_udentify_password();
+        string_t& udentify_password_known = this->udentify_password_known();
+        udentify_password_known.assign(valueof_unknown_udentify_password);
+        return udentify_password_known;
+    }
     virtual const string_t& get_udentify_password_known() const {
         const string_t& udentify_password_known = this->udentify_password_known();
         return udentify_password_known;

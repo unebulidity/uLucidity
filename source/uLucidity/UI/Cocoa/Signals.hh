@@ -151,6 +151,7 @@ public:
         return false;
     }
 
+    /*/
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
     virtual bool onMenuItemHide() {
@@ -162,6 +163,7 @@ public:
         LOG_DEBUG("return false...");
         return false;
     }
+    /*/
     virtual bool onMenuItemStop() {
         PluginSignals* to = ForwardPluginSignalsTo();
         if ((to)) {
@@ -198,6 +200,7 @@ public:
         LOG_DEBUG("return false...");
         return false;
     }
+    /*/
     virtual bool onMenuItemShutdown() {
         PluginSignals* to = ForwardPluginSignalsTo();
         if ((to)) {
@@ -219,6 +222,7 @@ public:
         LOG_DEBUG("return false...");
         return false;
     }
+    /*/
 
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////

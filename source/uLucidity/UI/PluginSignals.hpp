@@ -31,6 +31,7 @@ class _EXPORT_CLASS PluginSignals: virtual public PluginSignalsImplements {
 public:
     typedef PluginSignalsImplements Implements;
 
+    /*/
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
     virtual bool onMenuItemuWebSave() {
@@ -160,6 +161,7 @@ public:
         return false;
     }
 
+    /*/
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
     virtual bool onMenuItemHide() {
@@ -171,6 +173,7 @@ public:
         //LOG_DEBUG("return false...");
         return false;
     }
+    /*/
     virtual bool onMenuItemStop() {
         PluginSignals* to = ForwardPluginSignalsTo();
         if ((to)) {
@@ -207,6 +210,7 @@ public:
         //LOG_DEBUG("return false...");
         return false;
     }
+    /*/
     virtual bool onMenuItemShutdown() {
         PluginSignals* to = ForwardPluginSignalsTo();
         if ((to)) {
@@ -228,6 +232,7 @@ public:
         //LOG_DEBUG("return false...");
         return false;
     }
+    /*/
 
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
@@ -267,6 +272,7 @@ public:
         //LOG_DEBUG("return false...");
         return false;
     }
+    /*/
 
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////

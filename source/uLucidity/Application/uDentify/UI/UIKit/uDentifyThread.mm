@@ -117,9 +117,10 @@ Main the_main;
         size_t length = 0;
         const char* chars = 0; 
         NSObject* view = nil;
+        xos::string target_result;
 
         LOG_DEBUG("((chars = uLucidity::Application::uDentify::UI::UIKit::Network::Sockets::Client::the_main.get_target_result().has_chars(length)))...");
-        if ((chars = uLucidity::Application::uDentify::UI::UIKit::Network::Sockets::Client::the_main.get_target_result().has_chars(length))) {
+        if ((chars = uLucidity::Application::uDentify::UI::UIKit::Network::Sockets::Client::the_main.get_target_result(target_result).has_chars(length))) {
             LOG_DEBUG("...((\"" << chars << "\" = uLucidity::Application::uDentify::UI::UIKit::Network::Sockets::Client::the_main.get_target_result().has_chars(" << length << ")))");
             NSString* result = nil;
 

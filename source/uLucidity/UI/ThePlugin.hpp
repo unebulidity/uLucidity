@@ -172,8 +172,8 @@ public:
             LOG_DEBUG("return to->onMinimizeHideClicked()...");
             return to->onMinimizeHideClicked();
         }
-        LOG_DEBUG("return true...");
-        return true;
+        LOG_DEBUG("return false...");
+        return false;
     }
     virtual bool onMaximizeClicked() {
         PluginSignals* to = ForwardPluginSignalsTo();
@@ -194,6 +194,7 @@ public:
         return true;
     }
 
+    /*/
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
     virtual bool onOptionsClicked() {
@@ -214,6 +215,7 @@ public:
         LOG_DEBUG("return true...");
         return true;
     }
+    /*/
 
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////

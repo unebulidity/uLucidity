@@ -22,6 +22,7 @@
 #define ULUCIDITY_APPLICATION_UDENTIFY_UI_UIKIT_NETWORK_SOCKETS_CLIENT_MAIN_HH
 
 #include "uLucidity/Application/Network/Sockets/Client/Main.hh"
+/*/#include "uLucidity/Application/Console/Network/Sockets/Protocol/Client/Main.hh"/*/
 #include "uLucidity/Application/Client/Main.hh"
 
 namespace uLucidity {
@@ -38,12 +39,14 @@ namespace Client {
 template 
 <class TEvents = uLucidity::Application::Network::Sockets::Base::Main::Events,
  class TMain = uLucidity::Application::Network::Sockets::Client::Main, 
+ /*/class TProtocolMain = uLucidity::Application::Console::Network::Sockets::Protocol::Client::Main,/*/
  class TExtends = uLucidity::Application::Client::Main, 
  class TImplements = typename TExtends::Implements>
 class exported Maint: virtual public TEvents, virtual public TImplements, public TExtends {
 public:
     typedef TEvents Events;
     typedef TMain Main;
+    /*/typedef TProtocolMain ProtocolMain;/*/
     typedef TImplements Implements;
     typedef TExtends Extends;
     typedef Maint Derives;
@@ -54,7 +57,9 @@ public:
 
     //////////////////////////////////////////////////////////////////////////
     /// constructor / destructor
-    Maint(): main_(*this) {
+    Maint()
+    : main_(*this), 
+      unknown_password_response_("{\"password\":\"unknown\"}") {
     }
     virtual ~Maint() {
     }
@@ -66,9 +71,14 @@ public:
     /// run
     virtual int run() {
         int err = 0;
+        /*/const string& target_result =  protocol_main_.set_udentify_password_unknown();/*/
+        const string_t& unknown_password_response = this->unknown_password_response();
         const string_t& request = this->request();
         string_t& response = this->response();
 
+        LOGGER_IS_LOGGED_INFO("response.assign(\"" << unknown_password_response << "\")...");
+        response.assign(unknown_password_response);
+        
         LOGGER_IS_LOGGED_INFO("(!(err = main_.all_Run(\"" << response << "\", \"" << request << "\")))...");
         if (!(err = main_.all_Run(response, request))) {
             LOGGER_IS_LOGGED_INFO("...(!(" << err << " = main_.all_Run(\"" << response << "\", \"" << request << "\")))");
@@ -77,17 +87,48 @@ public:
         }
         return err;
     }
+    /*/
+    ///////////////////////////////////////////////////////////////////////
+    virtual int on_after_receive(string &target, const string &source) {
+        int err = 0;
+        const string& target_result =  protocol_main_.set_udentify_password_unknown();
+        if (!(err = protocol_main_.all_process_response_to_request(target, source))) {} else {}
+        return err;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    virtual const xos::string& get_target_result(xos::string& result) {
+        const string& target_result =  protocol_main_.get_udentify_password_known();
+        result.assign(target_result);
+        return result;
+    }
+    /*/
+    //////////////////////////////////////////////////////////////////////////
+    virtual const xos::string& get_target_result(xos::string& result) {
+        const string& target_result =  main_.get_target_result();
+        result.assign(target_result);
+        return result;
+    }
+    /*/
     //////////////////////////////////////////////////////////////////////////
     virtual const string& get_target_result() const {
         const string& target_result =  main_.get_target_result();
         return target_result;
     }
+    /*/
     //////////////////////////////////////////////////////////////////////////
 protected:
 
     //////////////////////////////////////////////////////////////////////////
+    string_t& unknown_password_response() const {
+        return (string_t&)unknown_password_response_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
 protected:
+    string_t unknown_password_response_;
     Main main_;
+    /*/ProtocolMain protocol_main_;/*/
 }; /// class Maint
 typedef Maint<> Main;
 

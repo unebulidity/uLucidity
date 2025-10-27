@@ -30,6 +30,7 @@
 
             [self addItem:[NSMenuItem separatorItem]];
 
+            /*/
             if ((item = [[MenuItem alloc]
                  initWithTitle:@ULUCIDITY_UI_COCOA_MENU_ITEM_WEB
                  keyEquivalent:@ULUCIDITY_UI_COCOA_MENU_ITEM_WEBK
@@ -188,6 +189,7 @@
                  target:self action:@selector(onMenuItemLock:) enabled:YES])) {
                 [self addItem:item];
             }
+            /*/
             if ((item = [[MenuItem alloc]
                  initWithTitle:@ULUCIDITY_UI_COCOA_MENU_ITEM_SHUTSOWN
                  keyEquivalent:@ULUCIDITY_UI_COCOA_MENU_ITEM_SHUTSOWNK
@@ -199,6 +201,7 @@
         return nil;
     }
 
+    /*/
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
     -(void)onMenuItemuWebSave:(id)sender {
@@ -275,6 +278,7 @@
         if ((handlers) && (handlers->onMenuItemViewuKeeper())) {
         }
     }
+    /*/
 
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
@@ -284,6 +288,7 @@
             [_window miniaturize:sender];
         }
     }
+    /*/
     -(void)onMenuItemStop:(id)sender {
         Signals* handlers = Signals::handlers();
         if ((handlers) && (handlers->onMenuItemStop())) {
@@ -304,6 +309,7 @@
         if ((handlers) && (handlers->onMenuItemLock())) {
         }
     }
+    /*/
     -(void)onMenuItemShutdown:(id)sender {
         Signals* handlers = Signals::handlers();
         if ((handlers) && (handlers->onMenuItemShutdown()) && (_application)) {
@@ -311,6 +317,8 @@
         }
     }
 
+    ///////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////
     -(void)onMenuItem:(id)sender {
         Signals* handlers = Signals::handlers();
         if ((handlers) && (handlers->onMenuItem())) {

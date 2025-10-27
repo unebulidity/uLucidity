@@ -129,9 +129,10 @@ Main the_main;
         /// Here you would typically update your UI elements.
         const char* chars = 0; size_t length = 0;
         NSObject* view = nil;
+        xos::string target_result;
 
         LOG_DEBUG("((chars = uLucidity::Application::uDentify::UI::Cocoa::Network::Sockets::Client::the_main.get_target_result().has_chars(length)))...");
-        if ((chars = uLucidity::Application::uDentify::UI::Cocoa::Network::Sockets::Client::the_main.get_target_result().has_chars(length))) {
+        if ((chars = uLucidity::Application::uDentify::UI::Cocoa::Network::Sockets::Client::the_main.get_target_result(target_result).has_chars(length))) {
             NSString* result= nil;
 
             if ((result = [[NSString alloc] initWithData:[NSData dataWithBytes:chars length:length] encoding:NSASCIIStringEncoding])) {

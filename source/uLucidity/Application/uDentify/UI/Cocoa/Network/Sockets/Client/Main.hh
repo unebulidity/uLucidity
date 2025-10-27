@@ -69,6 +69,7 @@ public:
     /// run
     virtual int run() {
         int err = 0;
+        const string& target_result =  protocol_main_.set_udentify_password_unknown();
         const string_t& request = this->request();
         string_t& response = this->response();
 
@@ -83,14 +84,24 @@ public:
     ///////////////////////////////////////////////////////////////////////
     virtual int on_after_receive(string &target, const string &source) {
         int err = 0;
+        const string& target_result =  protocol_main_.set_udentify_password_unknown();
         if (!(err = protocol_main_.all_process_response_to_request(target, source))) {} else {}
         return err;
     }
     //////////////////////////////////////////////////////////////////////////
-    virtual const string& get_target_result() const {
+    virtual const xos::string& get_target_result(xos::string& result) {
+        const string& target_result =  protocol_main_.get_udentify_password_known();
+        result.assign(target_result);
+        return result;
+    }
+    /*/
+    //////////////////////////////////////////////////////////////////////////
+    virtual const string& get_target_result() {
+        xos::lock lock(mutex_);
         const string& target_result =  protocol_main_.get_udentify_password_known();
         return target_result;
     }
+    /*/
     //////////////////////////////////////////////////////////////////////////
 protected:
 
@@ -98,6 +109,7 @@ protected:
 protected:
     Main main_;
     ProtocolMain protocol_main_;
+    //xos::mt::os::mutex mutex_;
 }; /// class Maint
 typedef Maint<> Main;
 

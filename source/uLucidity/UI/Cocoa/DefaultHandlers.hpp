@@ -78,6 +78,7 @@ public:
         return false;
     }
 
+    /*/
     ///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////
     virtual bool onOptionsClicked() {
@@ -98,6 +99,7 @@ public:
         LOG_DEBUG("return true...");
         return true;
     }
+    /*/
 };
 
 #endif // ULUCIDITY_UI_COCOA_DEFAULTHANDLERS_HPP 

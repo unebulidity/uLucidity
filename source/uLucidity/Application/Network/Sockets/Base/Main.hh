@@ -209,6 +209,12 @@ protected:
         send_t send = 0;
         string_t old_host(host_);
 
+        LOG_DEBUG("set_source_parameter(\"" << source << "\")...");
+        set_source_parameter(source);
+        
+        LOG_DEBUG("set_target_parameter(\"" << target << "\")...");
+        set_target_parameter(target);
+        
         LOG_DEBUG("host_.assign(accept_host_)...");
         host_.assign(accept_host_);
 
@@ -415,6 +421,12 @@ protected:
         int err = 0;
         send_t send = 0;
 
+        LOG_DEBUG("set_source_parameter(\"" << source << "\")...");
+        set_source_parameter(source);
+        
+        LOG_DEBUG("set_target_parameter(\"" << target << "\")...");
+        set_target_parameter(target);
+        
         LOG_DEBUG("((send = (this->send_)))...");
         if ((send = (this->send_))) {
             string target(source);
@@ -439,9 +451,6 @@ protected:
                             LOG_DEBUG("if ((s.open(*tp)))...");
                             if ((s.open(*tp))) {
 
-                                LOG_DEBUG("set_source_parameter(\"" << source << "\")...");
-                                set_source_parameter(source);
-                                
                                 LOG_DEBUG("(this->*send)(s, *ep, chars, length)...");
                                 (this->*send)(s, *ep, chars, length);
                                 LOG_DEBUG("s.close()...");
@@ -592,7 +601,12 @@ protected:
                 LOG_ERROR("...failed on (0 < (" << count << " = s.send(\"" << chars << "\", " << length << ", 0)))");
             }
         } else {
+            const string& target_parameter = this->target_parameter();
+            string& target_result = this->target_result();
+
             LOG_DEBUG("...failed on ((s.connect(ep)))");
+            LOG_DEBUG("target_result.assign(\"" << target_parameter << "\")...");
+            target_result.assign(target_parameter);
         }
         return 0;
     }
