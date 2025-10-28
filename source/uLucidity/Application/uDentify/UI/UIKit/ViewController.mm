@@ -101,13 +101,19 @@
 
     NSLog(@"((_thread))...");
     if ((_thread)) {
+
         NSLog(@"((self.threadDone))...");
         if ((self.threadDone)) {
+            const char *userChars = [self.User.text UTF8String], 
+                       *resourceChars = [self.Resource.text UTF8String], 
+                       *passwordChars = [self.Password.text UTF8String];
+
             self.threadDone = NO;
             NSLog(@"self.Value.text = nil...");
             self.Value.text = nil;
+
             NSLog(@"[_thread start:self]...");
-            [_thread start:self];
+            [_thread start:self User:self.User.text Resource:self.Resource.text Password:self.Password.text];
             NSLog(@"...[_thread start:self]");
         } else {
             NSLog(@"...failed on ((self.threadDone))");

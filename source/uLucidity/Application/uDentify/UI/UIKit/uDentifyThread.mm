@@ -51,7 +51,8 @@ Main the_main;
 
     ///////////////////////////////////////////////////////////////////////
     /// start
-    - (void)start:(NSObject *)view {
+    - (void)start:(NSObject *)view 
+        User:(NSString*)User Resource:(NSString*)Resource Password:(NSString*)Password {
         NSThread *thread = nil;
         
         /// Create and start a new thread to perform the run task
@@ -63,6 +64,15 @@ Main the_main;
 
             LOG_DEBUG("_thread = " << String(thread) << "...");
             _thread = thread;
+            
+            LOG_DEBUG("_User = " << String(User) << "...");
+            _User = User;
+            
+            LOG_DEBUG("_Resource = " << String(Resource) << "...");
+            _Resource = Resource;
+            
+            LOG_DEBUG("_Password = " << String(Password) << "...");
+            _Password = Password;
 
             LOG_DEBUG("[self onWillStart:thread]...");
             [self onWillStart:thread];
@@ -81,9 +91,12 @@ Main the_main;
     - (void)run {
         /// This method runs on the secondary thread
         int err = 0;
+        const char *userChars = [self.User UTF8String], 
+                   *resourceChars = [self.Resource UTF8String], 
+                   *passwordChars = [self.Password UTF8String];
     
         LOG_DEBUG("(!(err = uLucidity::Application::uDentify::UI::UIKit::Network::Sockets::Client::the_main.run()))...");
-        if (!(err = uLucidity::Application::uDentify::UI::UIKit::Network::Sockets::Client::the_main.run())) {
+        if (!(err = uLucidity::Application::uDentify::UI::UIKit::Network::Sockets::Client::the_main.run(userChars, resourceChars, passwordChars))) {
             LOG_DEBUG("...(!(" << err << " = uLucidity::Application::uDentify::UI::UIKit::Network::Sockets::Client::the_main.run()))");
         } else {
             LOG_DEBUG("...failed on (!(" << err << " = uLucidity::Application::uDentify::UI::UIKit::Network::Sockets::Client::the_main.run()))");

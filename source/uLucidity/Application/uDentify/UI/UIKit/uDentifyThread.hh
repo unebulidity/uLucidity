@@ -45,10 +45,14 @@ namespace UIKit {
     }
     @property (assign) NSObject* view;
     @property (assign) NSObject* thread;
+    @property (assign) NSString* User;
+    @property (assign) NSString* Resource;
+    @property (assign) NSString* Password;
 
     ///////////////////////////////////////////////////////////////////////
     /// start
-    - (void)start:(NSObject*)view;
+    - (void)start:(NSObject*)view 
+      User:(NSString*)User Resource:(NSString*)Resource Password:(NSString*)Password;
   
     ///////////////////////////////////////////////////////////////////////
     /// run

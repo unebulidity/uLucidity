@@ -57,8 +57,17 @@ public:
 
     //////////////////////////////////////////////////////////////////////////
     /// constructor / destructor
+    ///
+    /// "{\"password\":{\"user\":\"user\",\"resource\":\"resource\",\"password\":\"password\"}}"
+    /// "{\"password\":\"unknown\"}"
+    ///
     Maint()
-    : main_(*this), 
+    : main_(*this),
+      before_password_request_("{\"password\":{"), 
+      after_password_request_("\"}}"), 
+      before_password_request_user_("\"user\":\""), 
+      before_password_request_resource_("\",\"resource\":\""), 
+      before_password_request_password_("\",\"password\":\""),
       unknown_password_response_("{\"password\":\"unknown\"}") {
     }
     virtual ~Maint() {
@@ -69,12 +78,36 @@ private:
 public:
     //////////////////////////////////////////////////////////////////////////
     /// run
-    virtual int run() {
+    virtual int run(const char *userChars, const char *resourceChars, const char *passwordChars) {
         int err = 0;
         /*/const string& target_result =  protocol_main_.set_udentify_password_unknown();/*/
+        const string_t& before_password_request = this->before_password_request();
+        const string_t& after_password_request = this->after_password_request();
+        const string_t& before_password_request_user = this->before_password_request_user();
+        const string_t& before_password_request_resource = this->before_password_request_resource();
+        const string_t& before_password_request_password = this->before_password_request_password();
         const string_t& unknown_password_response = this->unknown_password_response();
-        const string_t& request = this->request();
+        string_t& request = this->request();
         string_t& response = this->response();
+
+        LOGGER_IS_LOGGED_INFO("request.assign(\"" << before_password_request << "\")...");
+        request.assign(before_password_request);
+        LOGGER_IS_LOGGED_INFO("request.append(\"" << before_password_request_user << "\")...");
+        request.append(before_password_request_user);
+        LOGGER_IS_LOGGED_INFO("request.append(\"" << userChars << "\")...");
+        request.append(userChars);
+
+        LOGGER_IS_LOGGED_INFO("request.append(\"" << before_password_request_resource << "\")...");
+        request.append(before_password_request_resource);
+        LOGGER_IS_LOGGED_INFO("request.append(\"" << resourceChars << "\")...");
+        request.append(resourceChars);
+
+        LOGGER_IS_LOGGED_INFO("request.append(\"" << before_password_request_password << "\")...");
+        request.append(before_password_request_password);
+        LOGGER_IS_LOGGED_INFO("request.append(\"" << passwordChars << "\")...");
+        request.append(passwordChars);
+        LOGGER_IS_LOGGED_INFO("request.append(\"" << after_password_request << "\")...");
+        request.append(after_password_request);
 
         LOGGER_IS_LOGGED_INFO("response.assign(\"" << unknown_password_response << "\")...");
         response.assign(unknown_password_response);
@@ -119,6 +152,26 @@ public:
 protected:
 
     //////////////////////////////////////////////////////////////////////////
+    string_t& before_password_request() const {
+        return (string_t&)before_password_request_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    string_t& after_password_request() const {
+        return (string_t&)after_password_request_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    string_t& before_password_request_user() const {
+        return (string_t&)before_password_request_user_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    string_t& before_password_request_resource() const {
+        return (string_t&)before_password_request_resource_;
+    }
+    //////////////////////////////////////////////////////////////////////////
+    string_t& before_password_request_password() const {
+        return (string_t&)before_password_request_password_;
+    }
+    //////////////////////////////////////////////////////////////////////////
     string_t& unknown_password_response() const {
         return (string_t&)unknown_password_response_;
     }
@@ -126,7 +179,9 @@ protected:
 
     //////////////////////////////////////////////////////////////////////////
 protected:
-    string_t unknown_password_response_;
+    string_t before_password_request_, after_password_request_, 
+             before_password_request_user_, before_password_request_resource_, before_password_request_password_,
+             unknown_password_response_;
     Main main_;
     /*/ProtocolMain protocol_main_;/*/
 }; /// class Maint
