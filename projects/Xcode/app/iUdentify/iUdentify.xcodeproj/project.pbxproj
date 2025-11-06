@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2D0F2AB12EAC224800DDE416 /* libjson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D0F2AB02EAC224800DDE416 /* libjson.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		2D0F2AB32EAC243100DDE416 /* out.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2D0F2AB22EAC243100DDE416 /* out.cpp */; };
 		2D0F2AB52EAC255E00DDE416 /* output.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2D0F2AB42EAC255E00DDE416 /* output.cpp */; };
 		2D0F2AB72EAC256900DDE416 /* input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2D0F2AB62EAC256900DDE416 /* input.cpp */; };
@@ -22,6 +21,7 @@
 		2D57BCDD2EA6B0270000A68E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D57BCDB2EA6B0270000A68E /* LaunchScreen.storyboard */; };
 		2D57BCE82EA6B0270000A68E /* iUdentifyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D57BCE72EA6B0270000A68E /* iUdentifyTests.m */; };
 		2D57BCF32EA6B0270000A68E /* iUdentifyUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D57BCF22EA6B0270000A68E /* iUdentifyUITests.m */; };
+		2D8E013F2EBCEEC7006F8104 /* libjson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8E013E2EBCEEC7006F8104 /* libjson.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +64,7 @@
 		2D57BCEE2EA6B0270000A68E /* iUdentifyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iUdentifyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D57BCF22EA6B0270000A68E /* iUdentifyUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iUdentifyUITests.m; sourceTree = "<group>"; };
 		2D57BCF42EA6B0270000A68E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2D8E013E2EBCEEC7006F8104 /* libjson.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjson.a; path = ../../../../../projects/build/os/Xcode/unebulidity/Build/Products/Debug/libjson.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2D0F2AB12EAC224800DDE416 /* libjson.a in Frameworks */,
+				2D8E013F2EBCEEC7006F8104 /* libjson.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,6 +96,7 @@
 		2D0F2AAF2EAC224800DDE416 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2D8E013E2EBCEEC7006F8104 /* libjson.a */,
 				2D0F2AB02EAC224800DDE416 /* libjson.a */,
 			);
 			name = Frameworks;
@@ -467,7 +469,7 @@
 				);
 				INFOPLIST_FILE = iUdentify/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../../../thirdparty/libjson/libjson_7.6.1/build/os/QtCreator/Debug/lib/libjson\"";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../../../../projects/build/os/Xcode/unebulidity/Build/Products/Debug\"";
 				PRODUCT_BUNDLE_IDENTIFIER = ulucidity.iUdentify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -483,7 +485,7 @@
 				);
 				INFOPLIST_FILE = iUdentify/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../../../thirdparty/libjson/libjson_7.6.1/build/os/QtCreator/Debug/lib/libjson\"";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../../../../../projects/build/os/Xcode/unebulidity/Build/Products/Release\"";
 				PRODUCT_BUNDLE_IDENTIFIER = ulucidity.iUdentify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
