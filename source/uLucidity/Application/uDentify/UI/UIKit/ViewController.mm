@@ -16,10 +16,95 @@
 ///   File: ViewController.mm
 ///
 /// Author: $author$
-///   Date: 10/20/2025
+///   Date: 10/20/2025, 11/9/2025
 //////////////////////////////////////////////////////////////////////////
 #import "ViewController.h"
 #include "uLucidity/Application/uDentify/UI/UIKit/uDentifyThread.hh"
+#include "uLucidity/Application/Base/Main.hh"
+
+namespace uLucidity {
+namespace Application {
+namespace uDentify {
+namespace UI {
+namespace UIKit {
+
+//////////////////////////////////////////////////////////////////////////
+/// class ResultProcessort
+template <class TExtends = uLucidity::Application::Base::Main, class TImplements = typename TExtends::Implements>
+class _EXPORT_CLASS ResultProcessort: virtual public TImplements, public TExtends {
+public:
+    typedef TImplements Implements;
+    typedef TExtends Extends;
+    typedef ResultProcessort Derives;
+
+    typedef typename Extends::string string;
+    typedef typename Extends::string_t string_t;
+    typedef typename Extends::char_t char_t;
+
+    //////////////////////////////////////////////////////////////////////////
+    /// constructor / destructor
+    ResultProcessort()
+    : m_before_password("{\"password\":\""), 
+      m_after_password("\"}"),
+      m_after_message("\r\n")  {
+    }
+    virtual ~ResultProcessort() {
+    }
+private:
+    ResultProcessort(const ResultProcessort &copy): Extends(copy) {
+    }
+public:
+    //////////////////////////////////////////////////////////////////////////
+    /// Process
+    virtual bool Process(const char*& in, size_t &length) {
+        if ((in) && (length)) {
+            size_t before_password_length = m_before_password.length(), 
+                   after_password_length = m_after_password.length(),
+                   after_message_length = m_after_message.length();
+
+            LOG_DEBUG("((length = " << length << " > " << (before_password_length+after_password_length+after_message_length) << "))...");
+            if ((length > (before_password_length+after_password_length+after_message_length))) {
+                string before_password((const char*)(in), before_password_length);
+
+                LOG_DEBUG("(!(m_before_password.compare(before_password)))...");
+                if (!(m_before_password.compare(before_password))) {
+                    string after_password((const char*)(in+(length-after_password_length)), after_password_length);
+    
+                    LOG_DEBUG("(!(m_after_password.compare(after_password)))...");
+                    if (!(m_after_password.compare(after_password))) {
+                        LOG_DEBUG("in += before_password_length...");
+                        in += before_password_length;
+                        LOG_DEBUG("length -= (before_password_length+after_password_length)...");
+                        length -= (before_password_length+after_password_length);
+                    } else {
+                        after_password.assign((const char*)(in+(length-after_password_length-after_message_length)), after_password_length);
+                        LOG_DEBUG("(!(m_after_password.compare(after_password)))...");
+                        if (!(m_after_password.compare(after_password))) {
+                            LOG_DEBUG("in += before_password_length...");
+                            in += before_password_length;
+                            LOG_DEBUG("length -= (before_password_length+after_password_length+after_message_length)...");
+                            length -= (before_password_length+after_password_length+after_message_length);
+                        } else {
+                        }
+                    }
+                } else {}
+            } else {}
+        } else{}
+        return true;
+    }
+    //////////////////////////////////////////////////////////////////////////
+protected:
+    string m_before_password, m_after_password, m_after_message;
+}; /// class ResultProcessort
+typedef ResultProcessort<> ResultProcessor;
+
+ResultProcessor theResultProcessor;
+
+} /// namespace UIKit 
+} /// namespace UI 
+} /// namespace uDentify 
+} /// namespace Application 
+} /// namespace uLucidity 
 
 @interface ViewController ()
 
@@ -60,7 +145,9 @@
     self.Done.layer.cornerRadius = 9.0;
     self.Done.clipsToBounds = YES;
 
-    self.valueUnset = YES;
+    NSLog(@"self.valueUnset = NO...");
+    self.valueUnset = NO;
+    NSLog(@"self.threadDone = YES...");
     self.threadDone = YES;
     NSLog(@"((_thread = [[uDentifyThread alloc] init]))...");
     if ((_thread = [[uDentifyThread alloc] init])) {
@@ -162,7 +249,7 @@
         } else {
             NSLog(@"...failed on ((self.valueUnset))");
         }
-        self.valueUnset = YES;
+        NSLog(@"self.threadDone = YES...");;
         self.threadDone = YES;
     } else {
         NSLog(@"...failed on ((_thread))");
@@ -173,11 +260,37 @@
 /// onThreadResult
 - (void)onThreadResult:(NSString*)result {
     NSLog(@"...onThreadResult");
+
     NSLog(@"((result))...");
     if ((result)) {
+        const char* chars = 0;
+
+        NSLog(@"((chars = [result UTF8String]))...");
+        if ((chars = [result UTF8String])) {
+            uLucidity::Application::uDentify::UI::UIKit::ResultProcessor::string string(chars);
+            size_t length = 0;
+
+            NSLog(@"((chars = string.has_chars(length)))...");
+            if ((chars = string.has_chars(length))) {
+                uLucidity::Application::uDentify::UI::UIKit::ResultProcessor& 
+                processor = uLucidity::Application::uDentify::UI::UIKit::theResultProcessor;
+
+                NSLog(@"((processor.Process(chars, length)))...");
+                if ((processor.Process(chars, length))) {
+                    result = [[NSString alloc] initWithData:[NSData dataWithBytes:chars length:length] encoding:NSASCIIStringEncoding];
+                } else {
+                    NSLog(@"...failed on ((processor.Process(chars, length)))");
+                }
+            } else {
+                NSLog(@"...failed on ((chars = string.has_chars(length)))");
+            }
+        } else {
+            NSLog(@"...failed on ((chars = [result UTF8String]))");
+        }
         NSLog(@"self.Value.text = %@%@", result, @"...");
         self.Value.text = result;
         NSLog(@"...self.Value.text = %@", result);
+        NSLog(@"self.valueUnset = NO...");
         self.valueUnset = NO;
     } else {
         NSLog(@"...failed on ((result))");

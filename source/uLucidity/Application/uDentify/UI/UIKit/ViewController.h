@@ -16,11 +16,23 @@
 ///   File: ViewController.hh
 ///
 /// Author: $author$
-///   Date: 10/20/2025
+///   Date: 10/20/2025, 11/9/2025
 //////////////////////////////////////////////////////////////////////////
 //#import <UIKit/UIKit.h>
 #include "uLucidity/UI/UIKit/UIKit.h"
 #include "uLucidity/Application/uDentify/UI/UIKit/uDentifyThread.hh"
+
+namespace uLucidity {
+namespace Application {
+namespace uDentify {
+namespace UI {
+namespace UIKit {
+
+} /// namespace UIKit 
+} /// namespace UI 
+} /// namespace uDentify 
+} /// namespace Application 
+} /// namespace uLucidity 
 
 @interface ViewController : UIViewController
 
@@ -55,4 +67,3 @@
 /// onThreadResult
 - (void)onThreadResult:(NSString*)result;
 @end
-
